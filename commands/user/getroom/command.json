@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Lists free rooms for the nearest time slot",
+  "description_localizations": {
+    "fr": "Affiche les salles libres du créneau le plus proche"
+  },
+  "type": 1,
+  "options": []
+}

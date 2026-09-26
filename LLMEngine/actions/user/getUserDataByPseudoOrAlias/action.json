@@ -1,0 +1,14 @@
+{
+  "name": "{{commandName}}",
+  "description": "Returns a user's profile from their username or alias.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "value": {
+        "type": "string",
+        "description": "Username or alias."
+      }
+    },
+    "required": ["value"]
+  }
+}

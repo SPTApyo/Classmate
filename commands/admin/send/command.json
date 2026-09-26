@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sends a message to a channel",
+  "description_localizations": {
+    "fr": "Envoie un message dans un salon"
+  },
+  "type": 1,
+  "options": []
+}

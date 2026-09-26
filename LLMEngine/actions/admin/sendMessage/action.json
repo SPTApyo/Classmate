@@ -1,0 +1,44 @@
+{
+  "name": "sendMessage",
+  "description": "[ADMIN] Sends a message to a Discord channel, as plain text or as an embed.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "channelId": {
+        "type": "string",
+        "description": "Target channel ID."
+      },
+      "message": {
+        "type": "string",
+        "description": "Message content."
+      },
+      "isEmbed": {
+        "type": "boolean",
+        "description": "Send the message as an embed."
+      },
+      "embedOptions": {
+        "type": "object",
+        "description": "Embed customization: title, description, color, imageUrl.",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Embed title."
+          },
+          "description": {
+            "type": "string",
+            "description": "Embed description."
+          },
+          "color": {
+            "type": "string",
+            "description": "Embed color as an integer."
+          },
+          "imageUrl": {
+            "type": "string",
+            "description": "Embed image URL."
+          }
+        }
+      }
+    },
+    "required": ["channelId", "message"]
+  }
+}

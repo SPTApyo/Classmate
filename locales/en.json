@@ -1,0 +1,403 @@
+{
+  "common": {
+    "error": {
+      "title": "Error",
+      "generic": "An error occurred while running the command."
+    },
+    "timeout": {
+      "title": "Time's up",
+      "noAction": "No action taken."
+    },
+    "permissionDenied": "You don't have permission to use this command.",
+    "noGroups": "No group available.",
+    "unknownGroup": "Unknown group: **{group}**. Available groups: {groups}",
+    "invalidDate": "Invalid date. Use the DD-MM-YYYY format.",
+    "rateLimited": "⏱️ Too many requests. Try again in {seconds} seconds.",
+    "channelNotFound": "Channel not found.",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "devoir": {
+    "details": "**ID:** {id}\n**Assignment:** {title}\n**Subject:** {subject}\n**Due date:** {date}"
+  },
+  "prompts": {
+    "selectGroup": {
+      "title": "Select a group",
+      "description": "Pick a group from the menu below.",
+      "placeholder": "Select a group"
+    },
+    "selectDevoir": {
+      "description": "Group **{group}**: select an assignment.",
+      "placeholder": "Select an assignment",
+      "truncated": "⚠️ Only the first {max} assignments (out of {total}) are shown."
+    },
+    "noDevoir": {
+      "title": "No assignment found",
+      "description": "No assignment was found for group **{group}**."
+    }
+  },
+  "about": {
+    "info": "Name: {name}\nAuthor: {author}\nVersion: {version}\nLicense: {license}"
+  },
+  "add": {
+    "created": "Assignment added ({group})",
+    "updated": "Assignment already exists, due date updated ({group})",
+    "details": "**Assignment:** {title}\n**Subject:** {subject}\n**Due date:** {date}\n**Added by:** {user}"
+  },
+  "chat": {
+    "noAnswer": "The AI returned no answer.",
+    "error": "AI error: {message}"
+  },
+  "check": {
+    "running": "Checking upcoming assignments...",
+    "done": "Upcoming assignments checked."
+  },
+  "delete": {
+    "selectTitle": "Select an assignment to delete",
+    "success": {
+      "title": "Assignment deleted",
+      "description": "Assignment **{title}** (ID {id}) was deleted from group **{group}**."
+    },
+    "notFound": {
+      "title": "Deletion failed",
+      "description": "Could not find assignment **{id}** in group **{group}**."
+    }
+  },
+  "edit": {
+    "selectTitle": "Select an assignment to edit",
+    "modal": {
+      "title": "Edit assignment ({group})",
+      "assignment": "Assignment",
+      "subject": "Subject",
+      "dueDate": "Due date (DD-MM-YYYY)"
+    },
+    "invalidDate": {
+      "title": "Invalid date",
+      "description": "**{date}** is not in DD-MM-YYYY format. Nothing was saved."
+    },
+    "gone": "This assignment no longer exists.",
+    "success": "Assignment updated ({group})"
+  },
+  "editembed": {
+    "messageNotFound": "Message not found.",
+    "noEmbed": "This message has no embed.",
+    "success": "Embed updated.",
+    "error": "Failed to edit the embed."
+  },
+  "getroom": {
+    "noData": "No free room data for today.",
+    "noSlot": "No valid time slot found for today.",
+    "noRoom": "No free room for the nearest slot ({slot}).",
+    "header": "Free rooms for the nearest slot (**{slot}**):",
+    "error": "Failed to fetch free rooms.",
+    "floor": {
+      "ground": "Ground floor",
+      "first": "1st floor",
+      "second": "2nd floor",
+      "other": "Other"
+    }
+  },
+  "kill": {
+    "confirm": {
+      "title": "Confirm shutdown",
+      "description": "Do you really want to stop the bot?"
+    },
+    "cancelled": {
+      "title": "Cancelled",
+      "description": "Shutdown cancelled."
+    },
+    "stopping": {
+      "title": "Shutting down",
+      "description": "The bot is stopping..."
+    }
+  },
+  "list": {
+    "title": "Assignments ({group})",
+    "empty": "No assignment has been added.",
+    "item": "**ID:** {id}   |   **{title}** in **{subject}**, due {date} (added by {addedBy})",
+    "noSelection": "No group was selected."
+  },
+  "profile": {
+    "noChoice": "No choice available.",
+    "dept": {
+      "selectTitle": "Select your department",
+      "selectPrompt": "Pick your department from the list below.",
+      "placeholder": "Choose a department...",
+      "successTitle": "Department updated",
+      "successText": "Your department is now **{value}**.",
+      "timeoutText": "You did not select a department in time.",
+      "errorText": "Failed to update your department."
+    },
+    "train_prog": {
+      "selectTitle": "Select your training year",
+      "selectPrompt": "Pick your training year from the list below.",
+      "placeholder": "Choose a year...",
+      "successTitle": "Training year updated",
+      "successText": "Your training year is now **{value}**.",
+      "timeoutText": "You did not select a training year in time.",
+      "errorText": "Failed to update your training year."
+    },
+    "group": {
+      "selectTitle": "Select your group",
+      "selectPrompt": "Pick your group from the list below.",
+      "placeholder": "Choose a group...",
+      "successTitle": "Group updated",
+      "successText": "Your group is now **{value}**.",
+      "timeoutText": "You did not select a group in time.",
+      "errorText": "Failed to update your group."
+    }
+  },
+  "purge": {
+    "noGroups": "No group available to purge.",
+    "title": "Purge assignments",
+    "description": "Pick a group from the menu below, or 'All' to delete everything.",
+    "placeholder": "Select a group or 'All'",
+    "all": "All",
+    "scopeAll": "of every group",
+    "scopeGroup": "of group **{group}**",
+    "confirm": {
+      "title": "Confirm purge",
+      "description": "Delete every assignment {scope}?"
+    },
+    "cancelled": {
+      "title": "Purge cancelled",
+      "description": "The purge was cancelled."
+    },
+    "done": {
+      "title": "Purge complete",
+      "description": "Every assignment {scope} was deleted."
+    }
+  },
+  "regenerate": {
+    "success": "Assignment IDs renumbered for every group!",
+    "error": "Failed to renumber assignment IDs."
+  },
+  "send": {
+    "modal": {
+      "title": "Send a message",
+      "content": "Message"
+    },
+    "selectChannel": {
+      "title": "Select a channel",
+      "description": "Choose where to send the message.",
+      "placeholder": "Target channel"
+    },
+    "noPermission": "I can't send messages in this channel.",
+    "success": {
+      "title": "Sent",
+      "description": "Message sent to {channel}!"
+    }
+  },
+  "sendembed": {
+    "missingChannel": "Provide a channel ID or pick a channel.",
+    "noPermission": "I can't send messages or embeds in this channel.",
+    "success": "Message and embed sent.",
+    "error": "Failed to send the embed."
+  },
+  "setalias": {
+    "invalid": "Your alias must be 1 to {max} characters long.",
+    "error": "Failed to update your alias.",
+    "success": "AI alias updated: {alias}"
+  },
+  "sort": {
+    "success": "Assignments sorted!",
+    "error": "Failed to sort assignments."
+  },
+  "reminders": {
+    "devoirs": "Assignment reminder ({group})",
+    "qcm": "Quiz reminder ({group})",
+    "sae": "S.A.E reminder ({group})",
+    "item": "**Assignment:** {title}\n**Subject:** {subject}\n**Due date:** {date}\n**Time left: {remaining}.**",
+    "today": "today",
+    "dayOne": "1 day",
+    "dayMany": "{count} days",
+    "late": "{duration} late"
+  },
+  "assistant": {
+    "tooManySteps": "I couldn't finish this request (too many steps). Could you rephrase it more simply?",
+    "error": {
+      "timeout": "⏱️ The request took too long. Try a simpler request.",
+      "rateLimit": "🚫 Too many requests. Wait a moment before trying again.",
+      "policy": "⚠️ Your request violates the content policy.",
+      "generic": "❌ Sorry, something went wrong.",
+      "critical": "💥 A critical error occurred. The incident has been reported."
+    },
+    "file": {
+      "tooLarge": "❌ File too large ({size} MB, max {max} MB).",
+      "unsupported": "❌ Unsupported file type: .{ext}. Supported types: {supported}",
+      "convert": "❌ .{ext} files are not supported yet. Convert the file to PDF or text.",
+      "invalid": "❌ Invalid attachment.",
+      "rejected": "❌ {name} was rejected: its content does not match its extension or looks like a program.",
+      "conversionFailed": "❌ Could not read this .{ext} file right now. Try exporting it to PDF."
+    }
+  },
+  "reload": {
+    "success": "Settings reloaded: {groups} group(s), default language {locale}.",
+    "error": "settings.json was rejected, previous settings kept:\n{message}"
+  },
+  "settings": {
+    "title": "Bot settings",
+    "hint": "Pick a section to edit. Changes are saved and applied immediately.",
+    "placeholder": "Section to edit",
+    "export": "Export JSON",
+    "close": "Close",
+    "back": "Back",
+    "closed": "Settings panel closed.",
+    "saved": "✅ Saved.",
+    "exported": "Current settings. They contain calendar tokens: keep this file private.",
+    "imported": "✅ settings.json imported and applied.",
+    "importError": "❌ Import rejected: {message}",
+    "invalidColor": "Invalid color: {value}. Use a hex code like 23eb6d.",
+    "invalidLocale": "Unknown language: {value}. Available: {locales}",
+    "invalidUrl": "Invalid URL: {value}. It must start with https://",
+    "channelsHint": "Pick a channel for each role. Each change is saved immediately.",
+    "rolesHint": "Members with Manage Server are always admins. Roles added here must also be allowed in Server Settings > Integrations to see admin commands.",
+    "sections": {
+      "general": "General",
+      "groups": "Groups and calendars",
+      "channels": "Channels",
+      "sae": "S.A.E subjects",
+      "adminRoles": "Extra admin roles",
+      "appearance": "Colors and icon",
+      "llm": "AI models",
+      "ambient": "Ambient mode",
+      "notifications": "Notifications"
+    },
+    "summary": {
+      "language": "Language:",
+      "location": "Location:",
+      "department": "Department:",
+      "groups": "Groups:",
+      "sae": "S.A.E:",
+      "adminRoles": "Extra admin roles:",
+      "models": "AI models:",
+      "none": "none",
+      "ambient": "Ambient mode:",
+      "notifications": "Notifications:"
+    },
+    "channels": {
+      "assistant": "Assistant channel",
+      "test": "Test channel",
+      "log": "Error log channel",
+      "announcements": "Announcements (alerts, changes, brief)"
+    },
+    "general": {
+      "locale": "Default language (en or fr)",
+      "location": "Location (for the assistant)",
+      "department": "Department for /getroom",
+      "community": "Community (for the assistant)"
+    },
+    "sae": {
+      "field": "One subject per line"
+    },
+    "llm": {
+      "field": "One model per line: premium, balanced, fast"
+    },
+    "appearance": {
+      "global": "Main color",
+      "devoirs": "Assignments color",
+      "qcm": "Quiz color",
+      "sae": "S.A.E color",
+      "icon": "Footer icon URL (empty = bot avatar)"
+    },
+    "groups": {
+      "hint": "Pick a group to edit, or add one.",
+      "placeholder": "Group",
+      "add": "➕ Add a group",
+      "title": "Group {group}",
+      "details": "**Calendar:** {host}\n**Reminder channel:** {channel}",
+      "reminderChannel": "Reminder channel",
+      "editUrl": "Edit calendar URL",
+      "delete": "Delete group",
+      "newTitle": "New group",
+      "editTitle": "Calendar of {group}",
+      "nameField": "Group name (letters, digits, - or _)",
+      "urlField": "Moodle calendar URL (ICS)",
+      "deleted": "Group {group} removed. Its assignments file is kept.",
+      "role": "Role pinged for this group",
+      "extra": "**Pinged role:** {role}\n**Timetable (training year):** {trainProg}",
+      "trainProgField": "Training year for the timetable (e.g. BUT2)"
+    },
+    "invalidNumber": "{name} must be a number between {min} and {max}.",
+    "ambient": {
+      "hint": "In the selected channels, the bot reads conversations and joins only when it can clearly help. Members can opt out with /ambient.",
+      "channels": "Watched channels",
+      "on": "Enabled",
+      "off": "Disabled",
+      "enable": "Enable",
+      "disable": "Disable",
+      "tuning": "Tuning",
+      "minScore": "Local filter threshold (0-10)",
+      "confidence": "Classifier confidence (0-1)",
+      "debounce": "Silence before analysis (seconds)",
+      "cooldown": "Pause after an intervention (min)",
+      "maxPerHour": "Max interventions per hour"
+    },
+    "notifications": {
+      "hint": "Alerts go to the announcements channel (or the group reminder channel). Deadline alerts and timetable changes ping the group role. Timetable features need the training year of the group.",
+      "summary": "{on}/{total} on · alerts {hours} h before · brief at {brief} h",
+      "ownerAlerts": "Owner alerts",
+      "newAssignments": "New assignments",
+      "timetableChanges": "Timetable changes",
+      "deadlineHours": "Alert hours before a deadline (e.g. 24, 3)",
+      "briefHour": "Evening brief hour (0-23, empty = off)",
+      "ownerDmFailed": "No owner accepts DMs from the bot: owner alerts stay off. Open your DMs and try again.",
+      "invalidHours": "Hours must be numbers between 1 and {max}, separated by commas."
+    }
+  },
+  "ambient": {
+    "offer": "I can help with **{topic}** if you want. React with ✅ and I will answer.",
+    "optedOut": "Got it: I will no longer join your conversations on my own. You can still call me by my name or by mentioning me.",
+    "optedIn": "I can join your conversations again when I can help. Use /ambient again to turn it off."
+  },
+  "notifications": {
+    "item": "- **{title}** ({subject}): {when}",
+    "newAssignments": "📌 **New assignments ({group})**",
+    "deadline": "⏰ **Upcoming deadlines ({group})**",
+    "brief": "🌙 Tomorrow ({group}): {name} at {start} in {room}, done at {end} ({count} classes).",
+    "ownerTest": "Owner alerts are on: you will get a DM here if a calendar or the timetable keeps failing to sync.",
+    "health": {
+      "down": "⚠️ **{key}** failed {count} times in a row: {error}",
+      "up": "✅ **{key}** works again."
+    },
+    "dm": {
+      "deadline": "⏰ Reminder, group {group}:"
+    },
+    "timetable": {
+      "title": "📅 **Timetable changes ({group})**",
+      "cancelled": "- ❌ {name} {type} on {at} is cancelled",
+      "added": "- ➕ {name} {type} added on {at} in {room}",
+      "moved": "- 🔁 {name} {type} moved from {from} to {at} ({room})",
+      "room": "- 🚪 {name} {type} on {at}: room {from} → {room}",
+      "many": "- The timetable changed a lot ({count} changes), check it."
+    }
+  },
+  "dmReminders": {
+    "checking": "Checking that I can send you DMs...",
+    "welcome": "Deadline reminders are on for group {group}. Use /reminders again to stop them.",
+    "enabled": "Done: you will get the deadline reminders of group {group} by DM.",
+    "disabled": "DM reminders are off.",
+    "noGroup": "Pick your group with /setgroup first.",
+    "closed": "I can't DM you: allow direct messages from server members (Privacy settings), then try again. Nothing was turned on.",
+    "failed": "The test DM failed, nothing was turned on. Try again later."
+  },
+  "done": {
+    "title": "Assignments of {group}",
+    "prompt": "Pick an assignment to mark it as done (or not). Done assignments are skipped in your DM reminders.",
+    "placeholder": "Choose an assignment",
+    "marked": "**{title}** marked as done.",
+    "unmarked": "**{title}** is no longer marked as done.",
+    "none": "No upcoming assignment for {group}.",
+    "noGroup": "Pick your group with /setgroup first."
+  },
+  "quiz": {
+    "missing": "Give a file, a topic, or both.",
+    "unreadable": "I can't read text from this file (scanned PDF or image?). Try a DOCX, PPTX, text file or a topic.",
+    "failed": "I couldn't build a quiz this time, try again.",
+    "intro": "📝 Quiz: {count} questions on **{subject}**. Answer with the buttons, each answer is private.",
+    "correct": "✅ Correct! {explanation}",
+    "wrong": "❌ The answer was **{answer}**. {explanation}",
+    "already": "You already answered this one.",
+    "reveal": "Answer: {answer} · {count} answer(s)"
+  }
+}

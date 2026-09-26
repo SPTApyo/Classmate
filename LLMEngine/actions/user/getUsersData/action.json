@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Returns every registered user with their profile (Discord ID, username, alias, group, etc.).",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

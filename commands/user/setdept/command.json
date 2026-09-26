@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sets your department",
+  "description_localizations": {
+    "fr": "Définit ton département"
+  },
+  "type": 1,
+  "options": []
+}

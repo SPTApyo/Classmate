@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Lets the bot join your conversations on its own, or not",
+  "description_localizations": {
+    "fr": "Autorise ou non le bot à intervenir de lui-même dans tes conversations"
+  },
+  "type": 1,
+  "options": []
+}

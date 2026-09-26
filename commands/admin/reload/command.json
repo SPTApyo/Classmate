@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Reloads settings.json without restarting the bot",
+  "description_localizations": {
+    "fr": "Recharge settings.json sans redémarrer le bot"
+  },
+  "type": 1,
+  "options": []
+}

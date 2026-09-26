@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Deletes an assignment from a group",
+  "description_localizations": {
+    "fr": "Supprime un devoir d'un groupe"
+  },
+  "type": 1,
+  "options": []
+}

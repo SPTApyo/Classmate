@@ -1,0 +1,55 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sends an embed to a channel",
+  "description_localizations": {
+    "fr": "Envoie un embed dans un salon"
+  },
+  "type": 1,
+  "options": [
+    {
+      "name": "title",
+      "description": "Embed title",
+      "description_localizations": {
+        "fr": "Titre de l'embed"
+      },
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "description",
+      "description": "Embed description",
+      "description_localizations": {
+        "fr": "Description de l'embed"
+      },
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "message",
+      "description": "Message shown above the embed",
+      "description_localizations": {
+        "fr": "Message affiché avant l'embed"
+      },
+      "type": 3,
+      "required": false
+    },
+    {
+      "name": "channel_id",
+      "description": "Target channel ID",
+      "description_localizations": {
+        "fr": "ID du salon de destination"
+      },
+      "type": 3,
+      "required": false
+    },
+    {
+      "name": "channel",
+      "description": "Target channel",
+      "description_localizations": {
+        "fr": "Salon de destination"
+      },
+      "type": 7,
+      "required": false
+    }
+  ]
+}

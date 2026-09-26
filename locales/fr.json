@@ -1,0 +1,403 @@
+{
+  "common": {
+    "error": {
+      "title": "Erreur",
+      "generic": "Une erreur est survenue lors de l'exécution de la commande."
+    },
+    "timeout": {
+      "title": "Temps écoulé",
+      "noAction": "Aucune action effectuée."
+    },
+    "permissionDenied": "Vous n'avez pas la permission d'utiliser cette commande.",
+    "noGroups": "Aucun groupe disponible.",
+    "unknownGroup": "Groupe inconnu : **{group}**. Groupes disponibles : {groups}",
+    "invalidDate": "Date invalide. Utilisez le format JJ-MM-AAAA.",
+    "rateLimited": "⏱️ Trop de requêtes. Réessayez dans {seconds} secondes.",
+    "channelNotFound": "Salon introuvable.",
+    "confirm": "Confirmer",
+    "cancel": "Annuler"
+  },
+  "devoir": {
+    "details": "**ID :** {id}\n**Devoir :** {title}\n**Matière :** {subject}\n**Date limite :** {date}"
+  },
+  "prompts": {
+    "selectGroup": {
+      "title": "Sélectionner un groupe",
+      "description": "Sélectionnez un groupe dans le menu déroulant ci-dessous.",
+      "placeholder": "Sélectionnez un groupe"
+    },
+    "selectDevoir": {
+      "description": "Groupe **{group}** : sélectionnez un devoir.",
+      "placeholder": "Sélectionnez un devoir",
+      "truncated": "⚠️ Seuls les {max} premiers devoirs (sur {total}) sont affichés."
+    },
+    "noDevoir": {
+      "title": "Aucun devoir trouvé",
+      "description": "Aucun devoir n'a été trouvé pour le groupe **{group}**."
+    }
+  },
+  "about": {
+    "info": "Nom : {name}\nAuteur : {author}\nVersion : {version}\nLicence : {license}"
+  },
+  "add": {
+    "created": "Devoir ajouté ({group})",
+    "updated": "Devoir déjà existant, date mise à jour ({group})",
+    "details": "**Devoir :** {title}\n**Matière :** {subject}\n**Date limite :** {date}\n**Ajouté par :** {user}"
+  },
+  "chat": {
+    "noAnswer": "L'IA n'a pas renvoyé de réponse.",
+    "error": "Erreur IA : {message}"
+  },
+  "check": {
+    "running": "Vérification des devoirs à venir en cours...",
+    "done": "Vérification des devoirs à venir terminée."
+  },
+  "delete": {
+    "selectTitle": "Sélectionner un devoir à supprimer",
+    "success": {
+      "title": "Suppression réussie",
+      "description": "Le devoir **{title}** (ID {id}) a été supprimé du groupe **{group}**."
+    },
+    "notFound": {
+      "title": "Erreur de suppression",
+      "description": "Impossible de trouver le devoir **{id}** dans le groupe **{group}**."
+    }
+  },
+  "edit": {
+    "selectTitle": "Sélectionner un devoir à modifier",
+    "modal": {
+      "title": "Modifier le devoir ({group})",
+      "assignment": "Devoir",
+      "subject": "Matière",
+      "dueDate": "Date limite (JJ-MM-AAAA)"
+    },
+    "invalidDate": {
+      "title": "Date invalide",
+      "description": "La date **{date}** n'est pas au format JJ-MM-AAAA. Aucune modification enregistrée."
+    },
+    "gone": "Ce devoir n'existe plus.",
+    "success": "Devoir modifié ({group})"
+  },
+  "editembed": {
+    "messageNotFound": "Message introuvable.",
+    "noEmbed": "Aucun embed trouvé dans ce message.",
+    "success": "Embed modifié avec succès.",
+    "error": "Une erreur est survenue lors de la modification de l'embed."
+  },
+  "getroom": {
+    "noData": "Aucune donnée de salles libres pour aujourd'hui.",
+    "noSlot": "Aucun créneau horaire valide n'a été trouvé pour aujourd'hui.",
+    "noRoom": "Aucune salle libre trouvée pour le créneau le plus proche ({slot}).",
+    "header": "Salles libres pour le créneau le plus proche (**{slot}**) :",
+    "error": "Erreur lors de la récupération des salles libres.",
+    "floor": {
+      "ground": "Rez-de-chaussée",
+      "first": "1er étage",
+      "second": "2e étage",
+      "other": "Autre"
+    }
+  },
+  "kill": {
+    "confirm": {
+      "title": "Confirmation d'arrêt",
+      "description": "Êtes-vous sûr de vouloir arrêter le bot ?"
+    },
+    "cancelled": {
+      "title": "Action annulée",
+      "description": "L'arrêt du bot a été annulé."
+    },
+    "stopping": {
+      "title": "Arrêt en cours",
+      "description": "Le bot est en train de s'arrêter..."
+    }
+  },
+  "list": {
+    "title": "Liste des devoirs ({group})",
+    "empty": "Aucun devoir n'a été ajouté.",
+    "item": "**ID :** {id}   |   **{title}** en **{subject}**, pour le {date} (ajouté par {addedBy})",
+    "noSelection": "Aucun groupe n'a été sélectionné."
+  },
+  "profile": {
+    "noChoice": "Aucun choix disponible.",
+    "dept": {
+      "selectTitle": "Sélection du département",
+      "selectPrompt": "Choisissez votre département dans la liste ci-dessous.",
+      "placeholder": "Choisissez un département...",
+      "successTitle": "Département mis à jour",
+      "successText": "Votre département a été mis à jour : **{value}**",
+      "timeoutText": "Vous n'avez pas sélectionné de département à temps.",
+      "errorText": "Une erreur est survenue lors de la mise à jour du département."
+    },
+    "train_prog": {
+      "selectTitle": "Sélection de l'année de formation",
+      "selectPrompt": "Choisissez votre année de formation dans la liste ci-dessous.",
+      "placeholder": "Choisissez une année...",
+      "successTitle": "Année de formation mise à jour",
+      "successText": "Votre année de formation a été mise à jour : **{value}**",
+      "timeoutText": "Vous n'avez pas sélectionné d'année de formation à temps.",
+      "errorText": "Une erreur est survenue lors de la mise à jour de l'année de formation."
+    },
+    "group": {
+      "selectTitle": "Sélection du groupe",
+      "selectPrompt": "Choisissez votre groupe dans la liste ci-dessous.",
+      "placeholder": "Choisissez un groupe...",
+      "successTitle": "Groupe mis à jour",
+      "successText": "Votre groupe a été mis à jour : **{value}**",
+      "timeoutText": "Vous n'avez pas sélectionné de groupe à temps.",
+      "errorText": "Une erreur est survenue lors de la mise à jour du groupe."
+    }
+  },
+  "purge": {
+    "noGroups": "Aucun groupe disponible pour la purge.",
+    "title": "Purger les devoirs",
+    "description": "Sélectionnez un groupe dans le menu ci-dessous, ou 'Tous' pour tout supprimer.",
+    "placeholder": "Sélectionnez un groupe ou 'Tous'",
+    "all": "Tous",
+    "scopeAll": "de tous les groupes",
+    "scopeGroup": "du groupe **{group}**",
+    "confirm": {
+      "title": "Confirmation de la purge",
+      "description": "Êtes-vous sûr de vouloir purger tous les devoirs {scope} ?"
+    },
+    "cancelled": {
+      "title": "Purge annulée",
+      "description": "La purge a été annulée."
+    },
+    "done": {
+      "title": "Purge réussie",
+      "description": "Tous les devoirs {scope} ont été supprimés."
+    }
+  },
+  "regenerate": {
+    "success": "Les identifiants de devoirs ont été régénérés pour tous les groupes !",
+    "error": "Une erreur est survenue lors de la régénération des identifiants."
+  },
+  "send": {
+    "modal": {
+      "title": "Envoyer un message",
+      "content": "Message"
+    },
+    "selectChannel": {
+      "title": "Sélectionner un salon",
+      "description": "Choisissez le salon où envoyer le message.",
+      "placeholder": "Salon de destination"
+    },
+    "noPermission": "Je n'ai pas la permission d'envoyer des messages dans ce salon.",
+    "success": {
+      "title": "Succès",
+      "description": "Message envoyé avec succès dans {channel} !"
+    }
+  },
+  "sendembed": {
+    "missingChannel": "Vous devez fournir l'ID d'un salon ou sélectionner un salon.",
+    "noPermission": "Je n'ai pas les permissions nécessaires pour envoyer des messages ou des embeds dans ce salon.",
+    "success": "Message et embed envoyés avec succès.",
+    "error": "Une erreur est survenue lors de l'envoi de l'embed."
+  },
+  "setalias": {
+    "invalid": "L'alias doit contenir entre 1 et {max} caractères.",
+    "error": "Erreur lors de la mise à jour de l'alias.",
+    "success": "Alias IA mis à jour : {alias}"
+  },
+  "sort": {
+    "success": "Tri terminé avec succès !",
+    "error": "Une erreur est survenue lors du tri des devoirs."
+  },
+  "reminders": {
+    "devoirs": "Rappel de Devoirs ({group})",
+    "qcm": "Rappel de QCM ({group})",
+    "sae": "Rappel de S.A.E ({group})",
+    "item": "**Devoir :** {title}\n**Matière :** {subject}\n**Date limite :** {date}\n**Temps restant : {remaining}.**",
+    "today": "aujourd'hui",
+    "dayOne": "1 jour",
+    "dayMany": "{count} jours",
+    "late": "{duration} de retard"
+  },
+  "assistant": {
+    "tooManySteps": "Je n'ai pas réussi à terminer cette demande (trop d'étapes). Peux-tu la reformuler plus simplement ?",
+    "error": {
+      "timeout": "⏱️ La requête a pris trop de temps. Réessayez avec une demande plus simple.",
+      "rateLimit": "🚫 Trop de requêtes. Attendez un moment avant de réessayer.",
+      "policy": "⚠️ Votre demande ne respecte pas les politiques de contenu.",
+      "generic": "❌ Désolé, une erreur est survenue.",
+      "critical": "💥 Une erreur critique est survenue. L'incident a été signalé."
+    },
+    "file": {
+      "tooLarge": "❌ Fichier trop volumineux ({size} Mo, max {max} Mo).",
+      "unsupported": "❌ Type de fichier non supporté : .{ext}. Types supportés : {supported}",
+      "convert": "❌ Les fichiers .{ext} ne sont pas encore supportés. Convertissez le fichier en PDF ou en texte.",
+      "invalid": "❌ Pièce jointe invalide.",
+      "rejected": "❌ {name} a été refusé : son contenu ne correspond pas à son extension ou ressemble à un programme.",
+      "conversionFailed": "❌ Impossible de lire ce fichier .{ext} pour le moment. Essayez de l’exporter en PDF."
+    }
+  },
+  "reload": {
+    "success": "Paramètres rechargés : {groups} groupe(s), langue par défaut {locale}.",
+    "error": "settings.json refusé, anciens paramètres conservés :\n{message}"
+  },
+  "settings": {
+    "title": "Paramètres du bot",
+    "hint": "Choisissez une section à modifier. Les changements sont enregistrés et appliqués immédiatement.",
+    "placeholder": "Section à modifier",
+    "export": "Exporter en JSON",
+    "close": "Fermer",
+    "back": "Retour",
+    "closed": "Panneau des paramètres fermé.",
+    "saved": "✅ Enregistré.",
+    "exported": "Paramètres actuels. Ils contiennent les tokens des calendriers : gardez ce fichier privé.",
+    "imported": "✅ settings.json importé et appliqué.",
+    "importError": "❌ Import refusé : {message}",
+    "invalidColor": "Couleur invalide : {value}. Utilisez un code hexadécimal comme 23eb6d.",
+    "invalidLocale": "Langue inconnue : {value}. Disponibles : {locales}",
+    "invalidUrl": "URL invalide : {value}. Elle doit commencer par https://",
+    "channelsHint": "Choisissez un salon pour chaque rôle. Chaque changement est enregistré immédiatement.",
+    "rolesHint": "Les membres avec la permission Gérer le serveur sont toujours admins. Les rôles ajoutés ici doivent aussi être autorisés dans Paramètres du serveur > Intégrations pour voir les commandes admin.",
+    "sections": {
+      "general": "Général",
+      "groups": "Groupes et calendriers",
+      "channels": "Salons",
+      "sae": "Matières S.A.E",
+      "adminRoles": "Rôles admin supplémentaires",
+      "appearance": "Couleurs et icône",
+      "llm": "Modèles IA",
+      "ambient": "Mode ambiant",
+      "notifications": "Notifications"
+    },
+    "summary": {
+      "language": "Langue :",
+      "location": "Lieu :",
+      "department": "Département :",
+      "groups": "Groupes :",
+      "sae": "S.A.E :",
+      "adminRoles": "Rôles admin supplémentaires :",
+      "models": "Modèles IA :",
+      "none": "aucun",
+      "ambient": "Mode ambiant :",
+      "notifications": "Notifications :"
+    },
+    "channels": {
+      "assistant": "Salon de l'assistant",
+      "test": "Salon de test",
+      "log": "Salon des erreurs",
+      "announcements": "Annonces (alertes, changements, brief)"
+    },
+    "general": {
+      "locale": "Langue par défaut (en ou fr)",
+      "location": "Lieu (pour l'assistant)",
+      "department": "Département pour /getroom",
+      "community": "Communauté (pour l'assistant)"
+    },
+    "sae": {
+      "field": "Une matière par ligne"
+    },
+    "llm": {
+      "field": "Un modèle par ligne (premium → rapide)"
+    },
+    "appearance": {
+      "global": "Couleur principale",
+      "devoirs": "Couleur des devoirs",
+      "qcm": "Couleur des QCM",
+      "sae": "Couleur des S.A.E",
+      "icon": "Icône du footer (vide = avatar)"
+    },
+    "groups": {
+      "hint": "Choisissez un groupe à modifier, ou ajoutez-en un.",
+      "placeholder": "Groupe",
+      "add": "➕ Ajouter un groupe",
+      "title": "Groupe {group}",
+      "details": "**Calendrier :** {host}\n**Salon des rappels :** {channel}",
+      "reminderChannel": "Salon des rappels",
+      "editUrl": "Modifier l'URL du calendrier",
+      "delete": "Supprimer le groupe",
+      "newTitle": "Nouveau groupe",
+      "editTitle": "Calendrier de {group}",
+      "nameField": "Nom du groupe (lettres, chiffres, - ou _)",
+      "urlField": "URL du calendrier Moodle (ICS)",
+      "deleted": "Groupe {group} supprimé. Son fichier de devoirs est conservé.",
+      "role": "Rôle pingé pour ce groupe",
+      "extra": "**Rôle pingé :** {role}\n**Emploi du temps (année) :** {trainProg}",
+      "trainProgField": "Année de formation pour l'EDT (ex. BUT2)"
+    },
+    "invalidNumber": "{name} doit être un nombre entre {min} et {max}.",
+    "ambient": {
+      "hint": "Dans les salons choisis, le bot lit les conversations et n’intervient que s’il peut clairement aider. Chaque membre peut se désactiver avec /ambient.",
+      "channels": "Salons écoutés",
+      "on": "Activé",
+      "off": "Désactivé",
+      "enable": "Activer",
+      "disable": "Désactiver",
+      "tuning": "Réglages",
+      "minScore": "Seuil du filtre local (0-10)",
+      "confidence": "Confiance du tri (0-1)",
+      "debounce": "Silence avant analyse (secondes)",
+      "cooldown": "Pause après intervention (min)",
+      "maxPerHour": "Interventions max par heure"
+    },
+    "notifications": {
+      "hint": "Les alertes vont dans le salon d'annonces (ou le salon de rappels du groupe). Les échéances et changements d'emploi du temps pinguent le rôle du groupe. Les fonctions d'emploi du temps demandent l'année de formation du groupe.",
+      "summary": "{on}/{total} activées · alertes {hours} h avant · brief à {brief} h",
+      "ownerAlerts": "Alertes owner",
+      "newAssignments": "Nouveaux devoirs",
+      "timetableChanges": "Changements d'EDT",
+      "deadlineHours": "Heures d'alerte avant échéance (ex. 24, 3)",
+      "briefHour": "Heure du brief du soir (0-23, vide = off)",
+      "ownerDmFailed": "Aucun owner n'accepte les MP du bot : les alertes owner restent désactivées. Ouvre tes MP et réessaie.",
+      "invalidHours": "Les heures doivent être des nombres entre 1 et {max}, séparés par des virgules."
+    }
+  },
+  "ambient": {
+    "offer": "Je peux t’aider sur **{topic}** si tu veux. Réagis avec ✅ et je réponds.",
+    "optedOut": "C’est noté : je n’interviendrai plus de moi-même dans tes conversations. Tu peux toujours m’appeler par mon nom ou me mentionner.",
+    "optedIn": "Je peux de nouveau intervenir dans tes conversations quand je peux aider. Refais /ambient pour désactiver."
+  },
+  "notifications": {
+    "item": "- **{title}** ({subject}) : {when}",
+    "newAssignments": "📌 **Nouveaux devoirs ({group})**",
+    "deadline": "⏰ **Échéances proches ({group})**",
+    "brief": "🌙 Demain ({group}) : {name} à {start} en {room}, fin à {end} ({count} cours).",
+    "ownerTest": "Alertes owner activées : tu recevras un MP ici si un calendrier ou l'emploi du temps n'arrive plus à se synchroniser.",
+    "health": {
+      "down": "⚠️ **{key}** a échoué {count} fois de suite : {error}",
+      "up": "✅ **{key}** fonctionne de nouveau."
+    },
+    "dm": {
+      "deadline": "⏰ Rappel, groupe {group} :"
+    },
+    "timetable": {
+      "title": "📅 **Changements d'emploi du temps ({group})**",
+      "cancelled": "- ❌ {name} {type} du {at} annulé",
+      "added": "- ➕ {name} {type} ajouté le {at} en {room}",
+      "moved": "- 🔁 {name} {type} déplacé du {from} au {at} ({room})",
+      "room": "- 🚪 {name} {type} du {at} : salle {from} → {room}",
+      "many": "- L'emploi du temps a beaucoup changé ({count} modifications), va voir."
+    }
+  },
+  "dmReminders": {
+    "checking": "Je vérifie que je peux t'envoyer des MP...",
+    "welcome": "Rappels d'échéances activés pour le groupe {group}. Refais /reminders pour les arrêter.",
+    "enabled": "C'est bon : tu recevras les rappels d'échéances du groupe {group} en MP.",
+    "disabled": "Rappels en MP désactivés.",
+    "noGroup": "Choisis d'abord ton groupe avec /setgroup.",
+    "closed": "Je ne peux pas t'envoyer de MP : autorise les messages privés des membres du serveur (Paramètres de confidentialité), puis réessaie. Rien n'a été activé.",
+    "failed": "Le MP de test a échoué, rien n'a été activé. Réessaie plus tard."
+  },
+  "done": {
+    "title": "Devoirs de {group}",
+    "prompt": "Choisis un devoir pour le marquer comme fait (ou non). Les devoirs faits sont ignorés dans tes rappels en MP.",
+    "placeholder": "Choisis un devoir",
+    "marked": "**{title}** marqué comme fait.",
+    "unmarked": "**{title}** n'est plus marqué comme fait.",
+    "none": "Aucun devoir à venir pour {group}.",
+    "noGroup": "Choisis d'abord ton groupe avec /setgroup."
+  },
+  "quiz": {
+    "missing": "Donne un fichier, un sujet, ou les deux.",
+    "unreadable": "Je n'arrive pas à lire de texte dans ce fichier (PDF scanné ou image ?). Essaie un DOCX, un PPTX, un fichier texte ou un sujet.",
+    "failed": "Je n'ai pas réussi à créer le quiz cette fois, réessaie.",
+    "intro": "📝 Quiz : {count} questions sur **{subject}**. Réponds avec les boutons, chaque réponse est privée.",
+    "correct": "✅ Bonne réponse ! {explanation}",
+    "wrong": "❌ La réponse était **{answer}**. {explanation}",
+    "already": "Tu as déjà répondu à celle-ci.",
+    "reveal": "Réponse : {answer} · {count} réponse(s)"
+  }
+}

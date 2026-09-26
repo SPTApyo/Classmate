@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sends reminders for upcoming assignments",
+  "description_localizations": {
+    "fr": "Envoie les rappels des devoirs à venir"
+  },
+  "type": 1,
+  "options": []
+}

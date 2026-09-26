@@ -1,0 +1,14 @@
+{
+  "name": "{{commandName}}",
+  "description": "[ADMIN] Adds a directive to the assistant's persistent memory.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "directive": {
+        "type": "string",
+        "description": "Directive text, rephrased clearly and concisely from the user's request."
+      }
+    },
+    "required": ["directive"]
+  }
+}

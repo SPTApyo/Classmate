@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Purges the assignments of one or every group",
+  "description_localizations": {
+    "fr": "Purge les devoirs d'un groupe ou de tous les groupes"
+  },
+  "type": 1,
+  "options": []
+}

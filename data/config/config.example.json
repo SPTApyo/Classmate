@@ -1,0 +1,13 @@
+{
+  "guildId": "<GUILD_ID>",
+  "directories": {
+    "logDirectory": "./log",
+    "dataDirectory": "./data"
+  },
+  "planning": {
+    "apiBaseUrl": "https://flopstudent-api.belucraft.fr"
+  },
+  "converter": {
+    "url": "http://converter:8080"
+  }
+}

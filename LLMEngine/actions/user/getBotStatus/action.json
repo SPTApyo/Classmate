@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Returns the bot status: memory, process uptime, Node.js and bot versions, platform, CPU, load, Discord member/channel/role counts, group and assignment counts, chat history size, logged error count, start time and current time. Uptime is the bot process uptime, not the host's.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

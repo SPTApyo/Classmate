@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Get deadline reminders for your group by DM, or stop them",
+  "description_localizations": {
+    "fr": "Reçois les rappels d'échéances de ton groupe en MP, ou arrête-les"
+  },
+  "type": 1,
+  "options": []
+}

@@ -1,0 +1,58 @@
+{
+  "name": "{{commandName}}",
+  "description": "Adds an assignment to a group",
+  "description_localizations": {
+    "fr": "Ajoute un devoir à un groupe"
+  },
+  "type": 1,
+  "options": [
+    {
+      "name": "group",
+      "name_localizations": {
+        "fr": "groupe"
+      },
+      "description": "Group name",
+      "description_localizations": {
+        "fr": "Nom du groupe"
+      },
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "title",
+      "name_localizations": {
+        "fr": "devoir"
+      },
+      "description": "Assignment title",
+      "description_localizations": {
+        "fr": "Nom du devoir"
+      },
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "subject",
+      "name_localizations": {
+        "fr": "matiere"
+      },
+      "description": "Subject",
+      "description_localizations": {
+        "fr": "Matière"
+      },
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "due_date",
+      "name_localizations": {
+        "fr": "date"
+      },
+      "description": "Due date (DD-MM-YYYY)",
+      "description_localizations": {
+        "fr": "Date limite (JJ-MM-AAAA)"
+      },
+      "type": 3,
+      "required": true
+    }
+  ]
+}

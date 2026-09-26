@@ -1,0 +1,34 @@
+{
+  "name": "{{commandName}}",
+  "description": "Chats with the AI, optionally with a file",
+  "description_localizations": {
+    "fr": "Discute avec l'IA, avec un fichier en option"
+  },
+  "type": 1,
+  "options": [
+    {
+      "name": "text",
+      "name_localizations": {
+        "fr": "texte"
+      },
+      "description": "Message for the AI",
+      "description_localizations": {
+        "fr": "Message pour l'IA"
+      },
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "file",
+      "name_localizations": {
+        "fr": "fichier"
+      },
+      "description": "File to send",
+      "description_localizations": {
+        "fr": "Fichier à envoyer"
+      },
+      "type": 11,
+      "required": false
+    }
+  ]
+}

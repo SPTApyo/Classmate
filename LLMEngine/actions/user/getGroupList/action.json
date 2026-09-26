@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Returns the available assignment groups.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

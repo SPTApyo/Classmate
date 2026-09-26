@@ -1,0 +1,22 @@
+{
+  "name": "{{commandName}}",
+  "description": "[ADMIN] Deletes messages from a Discord channel, optionally filtered. Default limit: 100 messages.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "channelId": {
+        "type": "string",
+        "description": "ID of the channel to purge."
+      },
+      "filter": {
+        "type": "string",
+        "description": "Optional keyword or author name filter."
+      },
+      "limit": {
+        "type": "number",
+        "description": "Maximum number of messages to scan (default 100)."
+      }
+    },
+    "required": ["channelId"]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Lists the assignments of a group",
+  "description_localizations": {
+    "fr": "Liste les devoirs d'un groupe"
+  },
+  "type": 1,
+  "options": []
+}

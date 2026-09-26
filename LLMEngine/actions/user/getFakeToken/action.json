@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Returns a random fake token (32 alphanumeric characters).",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

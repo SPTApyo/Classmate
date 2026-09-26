@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sorts the assignments of every group by due date",
+  "description_localizations": {
+    "fr": "Trie les devoirs de tous les groupes par échéance"
+  },
+  "type": 1,
+  "options": []
+}

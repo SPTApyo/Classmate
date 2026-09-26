@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Shows information about the bot",
+  "description_localizations": {
+    "fr": "Affiche les informations sur le bot"
+  },
+  "type": 1,
+  "options": []
+}

@@ -1,0 +1,71 @@
+{
+  "defaultLocale": "en",
+  "location": "<CITY, COUNTRY>",
+  "community": "<WHO USES THE SERVER, e.g. students of X>",
+  "tasks": [
+    {
+      "group": "2A",
+      "icsUrl": "https://webetud.iut-blagnac.fr/calendar/export_execute.php?userid=<USER_ID>&authtoken=<AUTH_TOKEN>&preset_what=all&preset_time=custom",
+      "reminderChannelId": "<CHANNEL_ID>",
+      "roleId": "",
+      "trainProg": "BUT1"
+    },
+    {
+      "group": "3A",
+      "icsUrl": "https://webetud.iut-blagnac.fr/calendar/export_execute.php?userid=<USER_ID>&authtoken=<AUTH_TOKEN>&preset_what=all&preset_time=custom",
+      "reminderChannelId": "<CHANNEL_ID>",
+      "roleId": "",
+      "trainProg": "BUT1"
+    }
+  ],
+  "saeNames": [
+    "DevApp",
+    "DevAppBD"
+  ],
+  "channels": {
+    "assistant": "<CHANNEL_ID>",
+    "test": "<CHANNEL_ID>",
+    "log": "<CHANNEL_ID>",
+    "announcements": "<CHANNEL_ID>"
+  },
+  "adminRoles": [],
+  "appearance": {
+    "embedGlobalColor": "0x23eb6d",
+    "embedDevoirsColor": "0xd830ef",
+    "embedQCMColor": "0x87ceeb",
+    "embedSAEColor": "0xf02247",
+    "embedFooterIconUrl": "https://cdn3.emoji.gg/emojis/6316-icon-moderator.png"
+  },
+  "llm": {
+    "models": [
+      "gemini-3.8-flash",
+      "gemini-3.5-flash-lite",
+      "gemini-3.1-flash-lite"
+    ]
+  },
+  "planning": {
+    "defaultDept": "INFO"
+  },
+  "ambient": {
+    "enabled": false,
+    "channels": [],
+    "minScore": 3,
+    "confidence": 0.75,
+    "debounceSeconds": 20,
+    "cooldownMinutes": 5,
+    "maxChecksPerHour": 20,
+    "maxInterventionsPerHour": 4,
+    "dailyTokenBudget": 200000,
+    "contextMessages": 8
+  },
+  "notifications": {
+    "ownerAlerts": true,
+    "newAssignments": true,
+    "timetableChanges": true,
+    "deadlineHours": [
+      24,
+      3
+    ],
+    "eveningBriefHour": 19
+  }
+}

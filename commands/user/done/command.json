@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Mark an assignment of your group as done, or not",
+  "description_localizations": {
+    "fr": "Marque un devoir de ton groupe comme fait, ou non"
+  },
+  "type": 1,
+  "options": []
+}

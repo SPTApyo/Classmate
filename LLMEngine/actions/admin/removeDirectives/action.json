@@ -1,0 +1,14 @@
+{
+  "name": "{{commandName}}",
+  "description": "[ADMIN] Deletes one directive by its index.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "index": {
+        "type": "number",
+        "description": "Directive index (starts at 0)."
+      }
+    },
+    "required": ["index"]
+  }
+}

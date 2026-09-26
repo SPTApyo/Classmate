@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Edits an assignment",
+  "description_localizations": {
+    "fr": "Modifie un devoir"
+  },
+  "type": 1,
+  "options": []
+}

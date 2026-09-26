@@ -1,0 +1,39 @@
+services:
+  bot:
+    build: .
+    image: iut_assistant:latest
+    restart: unless-stopped
+    depends_on:
+      - converter
+    networks:
+      - default
+      - converter
+    volumes:
+      - ./log:/home/node/IUT_Assistant/log
+      - ./data/config:/home/node/IUT_Assistant/data/config
+      - ./data/devoirs:/home/node/IUT_Assistant/data/devoirs
+      - ./data/keys:/home/node/IUT_Assistant/data/keys
+      - ./data/user_data:/home/node/IUT_Assistant/data/user_data
+
+  # Parses untrusted files: no internet, read-only, capped.
+  converter:
+    build: ./converter
+    image: iut_assistant_converter:latest
+    restart: unless-stopped
+    networks:
+      - converter
+    read_only: true
+    tmpfs:
+      - /tmp
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 512m
+    cpus: 1
+    pids_limit: 64
+
+networks:
+  # Internal: the converter cannot reach the internet.
+  converter:
+    internal: true

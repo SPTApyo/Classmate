@@ -1,0 +1,37 @@
+{
+  "name": "{{commandName}}",
+  "description": "Creates a revision quiz from a course file or a topic",
+  "description_localizations": {
+    "fr": "Crée un quiz de révision à partir d'un fichier de cours ou d'un sujet"
+  },
+  "type": 1,
+  "options": [
+    {
+      "name": "file",
+      "name_localizations": { "fr": "fichier" },
+      "description": "Course document (PDF with text, DOCX, PPTX, text...)",
+      "description_localizations": { "fr": "Document de cours (PDF avec texte, DOCX, PPTX, texte...)" },
+      "type": 11,
+      "required": false
+    },
+    {
+      "name": "topic",
+      "name_localizations": { "fr": "sujet" },
+      "description": "Topic of the quiz, or what to focus on in the file",
+      "description_localizations": { "fr": "Sujet du quiz, ou ce sur quoi insister dans le fichier" },
+      "type": 3,
+      "required": false,
+      "max_length": 200
+    },
+    {
+      "name": "count",
+      "name_localizations": { "fr": "nombre" },
+      "description": "Number of questions (3 to 10, default 5)",
+      "description_localizations": { "fr": "Nombre de questions (3 à 10, 5 par défaut)" },
+      "type": 4,
+      "required": false,
+      "min_value": 3,
+      "max_value": 10
+    }
+  ]
+}

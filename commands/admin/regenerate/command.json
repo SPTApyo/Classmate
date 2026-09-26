@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Renumbers assignment IDs",
+  "description_localizations": {
+    "fr": "Régénère les IDs des devoirs"
+  },
+  "type": 1,
+  "options": []
+}

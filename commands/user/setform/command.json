@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sets your training year",
+  "description_localizations": {
+    "fr": "Définit ton année de formation"
+  },
+  "type": 1,
+  "options": []
+}

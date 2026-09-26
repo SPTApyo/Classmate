@@ -1,0 +1,22 @@
+{
+  "name": "{{commandName}}",
+  "description": "Edits the bot settings from Discord",
+  "description_localizations": {
+    "fr": "Modifie les paramètres du bot depuis Discord"
+  },
+  "type": 1,
+  "options": [
+    {
+      "name": "file",
+      "name_localizations": {
+        "fr": "fichier"
+      },
+      "description": "settings.json file to import",
+      "description_localizations": {
+        "fr": "Fichier settings.json à importer"
+      },
+      "type": 11,
+      "required": false
+    }
+  ]
+}

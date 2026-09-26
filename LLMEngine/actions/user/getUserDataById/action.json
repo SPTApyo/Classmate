@@ -1,0 +1,14 @@
+{
+  "name": "{{commandName}}",
+  "description": "Returns a user's profile (username, alias, group, etc.) from their Discord ID.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "userId": {
+        "type": "string",
+        "description": "Discord ID of the user."
+      }
+    },
+    "required": ["userId"]
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sets your AI alias",
+  "description_localizations": {
+    "fr": "Définit ton alias pour l'IA"
+  },
+  "type": 1,
+  "options": [
+    {
+      "name": "alias",
+      "description": "Alias used by the AI",
+      "description_localizations": {
+        "fr": "Alias utilisé par l'IA"
+      },
+      "type": 3,
+      "required": true
+    }
+  ]
+}

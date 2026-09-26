@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sets your group",
+  "description_localizations": {
+    "fr": "Définit ton groupe"
+  },
+  "type": 1,
+  "options": []
+}

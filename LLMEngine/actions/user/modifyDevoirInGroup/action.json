@@ -1,0 +1,31 @@
+{
+  "name": "{{commandName}}",
+  "description": "Updates an existing assignment in a group.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "id": {
+        "type": "number",
+        "description": "Assignment ID."
+      },
+      "groupe": {
+        "type": "string",
+        "description": "Group name."
+      },
+      "newDevoir": {
+        "type": "string",
+        "description": "New title."
+      },
+      "newMatiere": {
+        "type": "string",
+        "description": "New subject."
+      },
+      "newDate": {
+        "type": "string",
+        "description": "New due date in DD-MM-YYYY format.",
+        "pattern": "^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-[0-9]{4}$"
+      }
+    },
+    "required": ["id", "groupe"]
+  }
+}

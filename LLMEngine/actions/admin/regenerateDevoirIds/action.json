@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "[ADMIN] Renumbers the assignment IDs of every group.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

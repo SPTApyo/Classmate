@@ -1,0 +1,33 @@
+{
+  "name": "{{commandName}}",
+  "description": "Creates a native Discord poll in a channel.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "channelId": {
+        "type": "string",
+        "description": "ID of the channel for the poll."
+      },
+      "question": {
+        "type": "string",
+        "description": "Poll question."
+      },
+      "options": {
+        "type": "array",
+        "items": {
+          "type": "string"
+        },
+        "description": "Possible answers."
+      },
+      "durationHour": {
+        "type": "number",
+        "description": "Poll duration in hours (optional)."
+      },
+      "allow_multiselect": {
+        "type": "boolean",
+        "description": "Allow multiple answers (optional, default false)."
+      }
+    },
+    "required": ["channelId", "question", "options"]
+  }
+}

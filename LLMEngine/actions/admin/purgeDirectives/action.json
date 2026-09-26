@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "[ADMIN] Deletes every directive from memory.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

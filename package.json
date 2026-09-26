@@ -1,0 +1,63 @@
+{
+  "name": "iut_assitant",
+  "Appversion": "1.7.0 - **RH0**",
+  "private": true,
+  "main": "index.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "build": "node scripts/build.mjs",
+    "start:dist": "node dist/index.js",
+    "lint": "eslint . && node scripts/lint-comments.mjs",
+    "lint:fix": "eslint . --fix && node scripts/lint-comments.mjs",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "i18n:check": "node scripts/check-i18n.mjs",
+    "check": "npm run lint && npm run format:check && npm run i18n:check",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,mjs}": [
+      "eslint --fix",
+      "node scripts/lint-comments.mjs",
+      "prettier --write"
+    ],
+    "locales/*.json": "node scripts/check-i18n.mjs",
+    "*.{json,md,yml,yaml}": "prettier --write"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "gemini",
+    "moodle",
+    "iut"
+  ],
+  "author": "_APYO",
+  "designer": {
+    "discordId": "437315912614281220",
+    "username": "_apyo"
+  },
+  "license": "ISC",
+  "description": "Discord bot for IUT Blagnac: Moodle assignment reminders and a Gemini-powered assistant",
+  "dependencies": {
+    "@google/genai": "^1.52.0",
+    "axios": "^1.11.0",
+    "discord.js": "^14.16.3",
+    "dotenv": "^16.4.7",
+    "ical": "^0.8.0",
+    "moment": "^2.30.1"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@eslint/js": "^10.0.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.11.0",
+    "globals": "^17.12.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.4.0",
+    "prettier": "^3.9.9"
+  }
+}

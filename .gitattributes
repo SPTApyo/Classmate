@@ -1,0 +1,4 @@
+# LF everywhere: husky scripts and Linux image
+* text=auto eol=lf
+*.png binary
+*.jpg binary

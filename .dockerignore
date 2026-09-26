@@ -1,0 +1,25 @@
+# Only build sources enter the Docker context
+node_modules
+dist
+log
+npm-debug.log
+.git
+.husky
+.vscode
+converter
+docker-compose.yml
+
+# Secrets and runtime data (provided by volumes)
+*.env
+data/keys
+data/config/config.json
+data/config/settings.json
+data/user_data
+data/devoirs
+
+# Personal files
+Objectif.txt
+Deploy.sh
+Deploy
+.old_code
+old_code

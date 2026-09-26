@@ -1,0 +1,14 @@
+{
+  "name": "duckduckgo_search",
+  "description": "Performs a web search using DuckDuckGo to find information on the internet. Use this when you need current information or answers not in your training data.",
+  "parameters": {
+    "type": "OBJECT",
+    "properties": {
+      "query": {
+        "type": "STRING",
+        "description": "The search query."
+      }
+    },
+    "required": ["query"]
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Stops the bot",
+  "description_localizations": {
+    "fr": "Arrête le bot"
+  },
+  "type": 1,
+  "options": []
+}

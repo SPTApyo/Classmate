@@ -1,0 +1,22 @@
+{
+  "name": "getFreeRooms",
+  "description": "Gets the free rooms of a department for a given week. Format the answer clearly, grouped by day and time slot.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "year": {
+        "type": "string",
+        "description": "Year, e.g. 2026. Defaults to the current year."
+      },
+      "week": {
+        "type": "string",
+        "description": "ISO week number, e.g. 17. Defaults to the current week."
+      },
+      "dept": {
+        "type": "string",
+        "description": "Department, e.g. INFO. Defaults to the user's department."
+      }
+    },
+    "required": ["year", "week", "dept"]
+  }
+}

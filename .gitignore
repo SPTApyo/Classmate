@@ -1,0 +1,29 @@
+# Dependencies and build output
+node_modules/
+dist/
+
+# Logs
+log/
+*.log
+
+# Secrets and local configuration
+.env
+*.env
+data/keys/
+data/config/config.json
+data/config/settings.json
+
+# Runtime data (Docker volumes)
+data/devoirs/
+data/user_data/
+
+# Personal files
+Objectif.txt
+Deploy.sh
+.old_code
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

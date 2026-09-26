@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "[ADMIN] Returns the directives currently stored in memory.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

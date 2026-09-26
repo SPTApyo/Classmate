@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Returns every channel of the Discord server with its name and ID.",
+  "parameters": {
+    "type": "object",
+    "properties": {},
+    "required": []
+  }
+}

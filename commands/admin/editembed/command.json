@@ -1,0 +1,55 @@
+{
+  "name": "{{commandName}}",
+  "description": "Edits an existing embed in a channel",
+  "description_localizations": {
+    "fr": "Modifie un embed existant dans un salon"
+  },
+  "type": 1,
+  "options": [
+    {
+      "name": "message_id",
+      "description": "ID of the message containing the embed",
+      "description_localizations": {
+        "fr": "ID du message contenant l'embed"
+      },
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "channel_id",
+      "description": "ID of the channel containing the embed",
+      "description_localizations": {
+        "fr": "ID du salon où se trouve l'embed"
+      },
+      "type": 3,
+      "required": true
+    },
+    {
+      "name": "title",
+      "description": "New embed title",
+      "description_localizations": {
+        "fr": "Nouveau titre de l'embed"
+      },
+      "type": 3,
+      "required": false
+    },
+    {
+      "name": "description",
+      "description": "New embed description",
+      "description_localizations": {
+        "fr": "Nouvelle description de l'embed"
+      },
+      "type": 3,
+      "required": false
+    },
+    {
+      "name": "message",
+      "description": "New message shown above the embed",
+      "description_localizations": {
+        "fr": "Nouveau message affiché avant l'embed"
+      },
+      "type": 3,
+      "required": false
+    }
+  ]
+}
