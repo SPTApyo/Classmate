@@ -3,6 +3,8 @@ services:
     build: .
     image: apyo37/classmate:${TAG:-latest}
     restart: unless-stopped
+    # On a NAS, run as the user owning ./data (id your_nas_user):
+    # user: "999:10"
     environment:
       # Reminders and the evening brief follow this time zone.
       TZ: ${TZ:-UTC}

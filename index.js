@@ -1,3 +1,6 @@
+// Data holds tokens: owner-only files and folders.
+process.umask(0o077);
+
 const { Client, GatewayIntentBits, Events } = require("discord.js");
 const fs = require("fs");
 const axios = require("axios");

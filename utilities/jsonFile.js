@@ -1,7 +1,9 @@
 const fs = require("fs");
+const path = require("path");
 
 // Temp file then rename: never a half-written file.
 function writeJsonAtomic(filePath, data) {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
   const tmpPath = `${filePath}.tmp`;
   fs.writeFileSync(tmpPath, JSON.stringify(data, null, 2) + "\n", "utf8");
   fs.renameSync(tmpPath, filePath);

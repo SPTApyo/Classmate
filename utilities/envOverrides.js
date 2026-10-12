@@ -51,7 +51,6 @@ function applyEnvOverrides(env = process.env) {
       setPath(data, key.slice(file.prefix.length + SEPARATOR.length).split(SEPARATOR), raw);
       applied.push(key);
     }
-    fs.mkdirSync(fromRoot("data", "config"), { recursive: true });
     writeJsonAtomic(filePath, data);
   }
   return applied;

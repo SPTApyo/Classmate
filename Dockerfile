@@ -27,12 +27,11 @@ COPY --from=node /usr/local/bin/node /usr/local/bin/node
 
 WORKDIR /app
 
-# Ownership set before the copy: no duplicated layer.
-RUN mkdir -p log data/config data/assignments data/keys data/user_data \
-  && chown -R node:node /app \
-  && chmod -R 700 /app
+# Any uid may run it; it creates owner-only subfolders.
+RUN mkdir -p log data && chown node:node log data && chmod 1777 log data
 
-COPY --from=build --chown=node:node /src/dist ./
+# Code stays root-owned and read-only.
+COPY --from=build --chmod=a+rX,go-w /src/dist ./
 
 USER node
 
