@@ -17,7 +17,7 @@ function loadConfiguration() {
   }
 }
 
-require("dotenv").config({ path: fromRoot("data", "keys", ".env") });
+require("dotenv").config({ path: fromRoot("data", "keys", ".env"), quiet: true });
 const { migrated, fromEnv, config, settings } = loadConfiguration();
 const permissions = require("./utilities/permissions");
 const identity = require("./utilities/identity");
