@@ -60,7 +60,7 @@ docker compose up -d
 
 Fill config.json and settings.json first, see [docs/configuration.md](docs/configuration.md). Or skip the files
 entirely and set everything in the environment section of docker-compose.yml, see
-[From docker-compose](docs/configuration.md#from-docker-compose). Set TAG to pin a version, for example TAG=1.8.0
+[From docker-compose](docs/configuration.md#from-docker-compose). Set TAG to pin a version, for example TAG=1.8.2
 docker compose up -d.
 
 From source, with Node.js 22 or later:
@@ -70,7 +70,8 @@ npm install
 npm start
 ```
 
-[docs/deployment.md](docs/deployment.md) covers volumes, updates and building the images yourself.
+[docs/deployment.md](docs/deployment.md) covers volumes, the time zone, updates, NAS setups without Compose and
+building the images yourself. Running IUT Assistant 1.7? Follow [docs/migration.md](docs/migration.md).
 
 # Usage
 
