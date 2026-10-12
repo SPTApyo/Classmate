@@ -1,12 +1,12 @@
 # syntax=docker/dockerfile:1
-FROM python:3.12-slim AS build
+FROM python:3.14-slim AS build
 
 # Only document converters: no audio, cloud or plugins.
 # Bundled test suites and bytecode are a third of the size.
 RUN PIP_NO_CACHE_DIR=1 pip install --no-compile --prefix=/install "markitdown[pdf,docx,pptx,xlsx,xls]>=0.1,<0.2" \
   && find /install -depth -type d \( -name tests -o -name test -o -name __pycache__ \) -exec rm -rf {} +
 
-FROM python:3.12-slim
+FROM python:3.14-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1
