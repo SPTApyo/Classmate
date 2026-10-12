@@ -16,6 +16,7 @@ module.exports = {
         "ci",
         "docs",
         "deps",
+        "deps-dev",
         "config",
         "tooling",
       ],

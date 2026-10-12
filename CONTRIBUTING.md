@@ -47,7 +47,7 @@ type(scope): summary
 ```
 
 - type: feat, fix, docs, style, refactor, perf, test, build, ci, chore, revert.
-- scope is optional: bot, assistant, commands, actions, assignments, i18n, converter, docker, ci, docs, deps, config, tooling.
+- scope is optional: bot, assistant, commands, actions, assignments, i18n, converter, docker, ci, docs, deps, deps-dev, config, tooling.
 - summary: imperative, lower case, no final period, 72 characters max for the whole line.
 - A breaking change adds ! after the type (feat!: ...) and explains the break in the body.
 - One commit, one intent.
