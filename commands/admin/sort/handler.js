@@ -1,6 +1,6 @@
-async function handler(interaction, { t, interacting, logger, devoirManager }) {
+async function handler(interaction, { t, interacting, logger, assignmentManager }) {
   try {
-    devoirManager.sortDevoirs();
+    assignmentManager.sortAssignments();
     await interacting.replyToInteraction(interaction, t("sort.success"));
   } catch (error) {
     logger.logMessage("[ ERROR ] /sort failed", error);

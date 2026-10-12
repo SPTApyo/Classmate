@@ -1,26 +1,19 @@
 {
+  "assistantName": "Atlas",
   "defaultLocale": "en",
   "location": "<CITY, COUNTRY>",
   "community": "<WHO USES THE SERVER, e.g. students of X>",
   "tasks": [
     {
-      "group": "2A",
-      "icsUrl": "https://webetud.iut-blagnac.fr/calendar/export_execute.php?userid=<USER_ID>&authtoken=<AUTH_TOKEN>&preset_what=all&preset_time=custom",
+      "group": "1A",
+      "icsUrl": "https://moodle.example.edu/calendar/export_execute.php?userid=<USER_ID>&authtoken=<AUTH_TOKEN>&preset_what=all&preset_time=recentupcoming",
       "reminderChannelId": "<CHANNEL_ID>",
       "roleId": "",
-      "trainProg": "BUT1"
-    },
-    {
-      "group": "3A",
-      "icsUrl": "https://webetud.iut-blagnac.fr/calendar/export_execute.php?userid=<USER_ID>&authtoken=<AUTH_TOKEN>&preset_what=all&preset_time=custom",
-      "reminderChannelId": "<CHANNEL_ID>",
-      "roleId": "",
-      "trainProg": "BUT1"
+      "level": "<LEVEL>"
     }
   ],
-  "saeNames": [
-    "DevApp",
-    "DevAppBD"
+  "projectSubjects": [
+    "<PROJECT SUBJECT>"
   ],
   "channels": {
     "assistant": "<CHANNEL_ID>",
@@ -31,10 +24,9 @@
   "adminRoles": [],
   "appearance": {
     "embedGlobalColor": "0x23eb6d",
-    "embedDevoirsColor": "0xd830ef",
-    "embedQCMColor": "0x87ceeb",
-    "embedSAEColor": "0xf02247",
-    "embedFooterIconUrl": "https://cdn3.emoji.gg/emojis/6316-icon-moderator.png"
+    "embedAssignmentsColor": "0xd830ef",
+    "embedQuizzesColor": "0x87ceeb",
+    "embedProjectsColor": "0xf02247"
   },
   "llm": {
     "models": [
@@ -44,7 +36,10 @@
     ]
   },
   "planning": {
-    "defaultDept": "INFO"
+    "defaultDept": "<DEPARTMENT>",
+    "departments": [
+      "<DEPARTMENT>"
+    ]
   },
   "ambient": {
     "enabled": false,

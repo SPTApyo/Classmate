@@ -2,5 +2,8 @@ const { createProfileFieldHandler } = require("../../../utilities/ProfileFieldCo
 
 module.exports = createProfileFieldHandler({
   field: "dept",
-  getChoices: () => ["INFO", "CS", "GIM", "RT", "LPMA", "Autre"],
+  getChoices: ({ settings }) => {
+    const { departments, defaultDept } = settings.get().planning || {};
+    return departments || [defaultDept].filter(Boolean);
+  },
 });

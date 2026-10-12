@@ -15,7 +15,7 @@ data/keys
 data/config/config.json
 data/config/settings.json
 data/user_data
-data/devoirs
+data/assignments
 
 # Personal files
 Objectif.txt
@@ -23,3 +23,8 @@ Deploy.sh
 Deploy
 .old_code
 old_code
+
+# Repository tooling and docs
+.github
+docs
+*.md

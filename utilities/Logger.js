@@ -8,8 +8,8 @@ const TAG_COLORS = {
   SUCCESS: "\x1b[92m",
   ERROR: "\x1b[91m",
   NOTICE: "\x1b[94m",
-  GEMINI: "\x1b[36m",
-  LLMDATA: "\x1b[35m",
+  AI: "\x1b[36m",
+  STORE: "\x1b[35m",
   AMBIENT: "\x1b[33m",
 };
 const RESET = "\x1b[0m";

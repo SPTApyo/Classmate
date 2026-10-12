@@ -11,13 +11,13 @@
     "permissionDenied": "Vous n'avez pas la permission d'utiliser cette commande.",
     "noGroups": "Aucun groupe disponible.",
     "unknownGroup": "Groupe inconnu : **{group}**. Groupes disponibles : {groups}",
-    "invalidDate": "Date invalide. Utilisez le format JJ-MM-AAAA.",
+    "invalidDate": "Date invalide. Utilisez le format AAAA-MM-JJ.",
     "rateLimited": "⏱️ Trop de requêtes. Réessayez dans {seconds} secondes.",
     "channelNotFound": "Salon introuvable.",
     "confirm": "Confirmer",
     "cancel": "Annuler"
   },
-  "devoir": {
+  "assignment": {
     "details": "**ID :** {id}\n**Devoir :** {title}\n**Matière :** {subject}\n**Date limite :** {date}"
   },
   "prompts": {
@@ -26,12 +26,12 @@
       "description": "Sélectionnez un groupe dans le menu déroulant ci-dessous.",
       "placeholder": "Sélectionnez un groupe"
     },
-    "selectDevoir": {
+    "selectAssignment": {
       "description": "Groupe **{group}** : sélectionnez un devoir.",
       "placeholder": "Sélectionnez un devoir",
       "truncated": "⚠️ Seuls les {max} premiers devoirs (sur {total}) sont affichés."
     },
-    "noDevoir": {
+    "noAssignment": {
       "title": "Aucun devoir trouvé",
       "description": "Aucun devoir n'a été trouvé pour le groupe **{group}**."
     }
@@ -69,11 +69,11 @@
       "title": "Modifier le devoir ({group})",
       "assignment": "Devoir",
       "subject": "Matière",
-      "dueDate": "Date limite (JJ-MM-AAAA)"
+      "dueDate": "Date limite (AAAA-MM-JJ)"
     },
     "invalidDate": {
       "title": "Date invalide",
-      "description": "La date **{date}** n'est pas au format JJ-MM-AAAA. Aucune modification enregistrée."
+      "description": "La date **{date}** n'est pas au format AAAA-MM-JJ. Aucune modification enregistrée."
     },
     "gone": "Ce devoir n'existe plus.",
     "success": "Devoir modifié ({group})"
@@ -92,8 +92,7 @@
     "error": "Erreur lors de la récupération des salles libres.",
     "floor": {
       "ground": "Rez-de-chaussée",
-      "first": "1er étage",
-      "second": "2e étage",
+      "numbered": "Étage {floor}",
       "other": "Autre"
     }
   },
@@ -128,14 +127,14 @@
       "timeoutText": "Vous n'avez pas sélectionné de département à temps.",
       "errorText": "Une erreur est survenue lors de la mise à jour du département."
     },
-    "train_prog": {
-      "selectTitle": "Sélection de l'année de formation",
-      "selectPrompt": "Choisissez votre année de formation dans la liste ci-dessous.",
-      "placeholder": "Choisissez une année...",
-      "successTitle": "Année de formation mise à jour",
-      "successText": "Votre année de formation a été mise à jour : **{value}**",
-      "timeoutText": "Vous n'avez pas sélectionné d'année de formation à temps.",
-      "errorText": "Une erreur est survenue lors de la mise à jour de l'année de formation."
+    "level": {
+      "selectTitle": "Sélection du niveau",
+      "selectPrompt": "Choisissez votre niveau (année d'études) dans la liste ci-dessous.",
+      "placeholder": "Choisissez un niveau...",
+      "successTitle": "Niveau mis à jour",
+      "successText": "Votre niveau a été mis à jour : **{value}**",
+      "timeoutText": "Vous n'avez pas sélectionné de niveau à temps.",
+      "errorText": "Une erreur est survenue lors de la mise à jour du niveau."
     },
     "group": {
       "selectTitle": "Sélection du groupe",
@@ -204,9 +203,9 @@
     "error": "Une erreur est survenue lors du tri des devoirs."
   },
   "reminders": {
-    "devoirs": "Rappel de Devoirs ({group})",
-    "qcm": "Rappel de QCM ({group})",
-    "sae": "Rappel de S.A.E ({group})",
+    "assignments": "Rappel de Devoirs ({group})",
+    "quizzes": "Rappel de QCM ({group})",
+    "projects": "Rappel des projets ({group})",
     "item": "**Devoir :** {title}\n**Matière :** {subject}\n**Date limite :** {date}\n**Temps restant : {remaining}.**",
     "today": "aujourd'hui",
     "dayOne": "1 jour",
@@ -256,7 +255,7 @@
       "general": "Général",
       "groups": "Groupes et calendriers",
       "channels": "Salons",
-      "sae": "Matières S.A.E",
+      "projects": "Matières des projets",
       "adminRoles": "Rôles admin supplémentaires",
       "appearance": "Couleurs et icône",
       "llm": "Modèles IA",
@@ -264,11 +263,12 @@
       "notifications": "Notifications"
     },
     "summary": {
+      "name": "Nom :",
       "language": "Langue :",
       "location": "Lieu :",
       "department": "Département :",
       "groups": "Groupes :",
-      "sae": "S.A.E :",
+      "projects": "Projets :",
       "adminRoles": "Rôles admin supplémentaires :",
       "models": "Modèles IA :",
       "none": "aucun",
@@ -282,12 +282,13 @@
       "announcements": "Annonces (alertes, changements, brief)"
     },
     "general": {
+      "name": "Nom de l'assistant (Atlas si vide)",
       "locale": "Langue par défaut (en ou fr)",
       "location": "Lieu (pour l'assistant)",
       "department": "Département pour /getroom",
       "community": "Communauté (pour l'assistant)"
     },
-    "sae": {
+    "projects": {
       "field": "Une matière par ligne"
     },
     "llm": {
@@ -295,9 +296,9 @@
     },
     "appearance": {
       "global": "Couleur principale",
-      "devoirs": "Couleur des devoirs",
-      "qcm": "Couleur des QCM",
-      "sae": "Couleur des S.A.E",
+      "assignments": "Couleur des devoirs",
+      "quizzes": "Couleur des QCM",
+      "projects": "Couleur des projets",
       "icon": "Icône du footer (vide = avatar)"
     },
     "groups": {
@@ -312,11 +313,11 @@
       "newTitle": "Nouveau groupe",
       "editTitle": "Calendrier de {group}",
       "nameField": "Nom du groupe (lettres, chiffres, - ou _)",
-      "urlField": "URL du calendrier Moodle (ICS)",
+      "urlField": "URL du calendrier (ICS, ex. Moodle)",
       "deleted": "Groupe {group} supprimé. Son fichier de devoirs est conservé.",
       "role": "Rôle pingé pour ce groupe",
-      "extra": "**Rôle pingé :** {role}\n**Emploi du temps (année) :** {trainProg}",
-      "trainProgField": "Année de formation pour l'EDT (ex. BUT2)"
+      "extra": "**Rôle pingé :** {role}\n**Niveau pour l'EDT :** {level}",
+      "levelField": "Niveau pour l'EDT (ex. BUT2)"
     },
     "invalidNumber": "{name} doit être un nombre entre {min} et {max}.",
     "ambient": {

@@ -3,7 +3,7 @@ const EmbedFormManager = require("./EmbedFormManager");
 // Builds a /setX handler; texts live under profile.<field>.
 function createProfileFieldHandler({ field, getChoices }) {
   return async function handler(interaction, deps) {
-    const { user, logger, interacting, addUserToLLMData } = deps;
+    const { user, logger, interacting, saveUserProfile } = deps;
     const form = new EmbedFormManager(interaction, interacting);
     const text = (key, params) => form.t(`profile.${field}.${key}`, params);
     const choices = getChoices(deps);
@@ -26,7 +26,7 @@ function createProfileFieldHandler({ field, getChoices }) {
     if (!selection) return form.showTimeout(text("timeoutText"));
 
     const value = selection.values[0];
-    const updated = await addUserToLLMData(user.id, { pseudo: user.username, [field]: value });
+    const updated = await saveUserProfile(user.id, { username: user.username, [field]: value });
     if (!updated) {
       logger.logMessage(`[ ERROR ] Failed to update ${field} for ${user.username} (${user.id})`);
       return form

@@ -1,15 +1,15 @@
 const { sendDM } = require("../../../utilities/dm");
 
 // Discord cannot tell whether DMs are open.
-async function handler(interaction, { t, client, logger, interacting, llmDataManager, devoirManager, user }) {
-  const profile = llmDataManager.getUserById(user.id);
+async function handler(interaction, { t, client, logger, interacting, assistantStore, assignmentManager, user }) {
+  const profile = assistantStore.getUserById(user.id);
   if (profile?.dmReminders) {
-    llmDataManager.setUserField(user.id, "dmReminders", false);
+    assistantStore.setUserField(user.id, "dmReminders", false);
     logger.logMessage(`[ NOTICE ] ${user.username} unsubscribed from DM reminders`);
     return interacting.replyToInteraction(interaction, t("dmReminders.disabled"));
   }
 
-  const group = devoirManager.resolveGroup(profile?.group);
+  const group = assignmentManager.resolveGroup(profile?.group);
   if (!group) return interacting.replyToInteraction(interaction, t("dmReminders.noGroup"));
 
   await interacting.replyToInteraction(interaction, t("dmReminders.checking"));
@@ -19,7 +19,7 @@ async function handler(interaction, { t, client, logger, interacting, llmDataMan
     return interacting.editInteraction(interaction, t(result.closed ? "dmReminders.closed" : "dmReminders.failed"));
   }
 
-  llmDataManager.setUserField(user.id, "dmReminders", true);
+  assistantStore.setUserField(user.id, "dmReminders", true);
   logger.logMessage(`[ SUCCESS ] ${user.username} subscribed to DM reminders for ${group}`);
   await interacting.editInteraction(interaction, t("dmReminders.enabled", { group }));
 }

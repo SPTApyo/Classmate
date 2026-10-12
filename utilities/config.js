@@ -1,17 +1,19 @@
 const fs = require("fs");
 const { fromRoot } = require("./paths");
+const { readJson, writeJsonAtomic } = require("./jsonFile");
+const { migrateSettings } = require("./migrateLegacyData");
 
 const CONFIG_PATH = fromRoot("data", "config", "config.json");
 const SETTINGS_PATH = fromRoot("data", "config", "settings.json");
 const POLL_INTERVAL_MS = 5000;
 const GROUP_NAME_REGEX = /^[A-Za-z0-9_-]{1,32}$/;
 
-function readJson(filePath) {
+function readConfigFile(filePath) {
   if (!fs.existsSync(filePath)) {
     const example = filePath.replace(/\.json$/, ".example.json");
     throw new Error(`Missing ${filePath}. Copy ${example} (or defaults/ in Docker) and fill it in.`);
   }
-  return JSON.parse(fs.readFileSync(filePath, "utf8"));
+  return readJson(filePath);
 }
 
 function assert(condition, message) {
@@ -65,16 +67,18 @@ function validateNotifications(notifications) {
 
 function validateSettings(settings) {
   assert(settings && typeof settings === "object", "root must be an object");
+  assert(isOptionalString(settings.assistantName), "assistantName must be a string");
   assert(Array.isArray(settings.tasks), "tasks must be an array");
   settings.tasks.forEach((task, i) => {
     assert(GROUP_NAME_REGEX.test(task?.group || ""), `tasks[${i}].group must match ${GROUP_NAME_REGEX}`);
     assert(isString(task.icsUrl), `tasks[${i}].icsUrl is required`);
     assert(isString(task.reminderChannelId), `tasks[${i}].reminderChannelId is required`);
     assert(isOptionalString(task.roleId), `tasks[${i}].roleId must be a role ID`);
-    assert(isOptionalString(task.trainProg), `tasks[${i}].trainProg must be a string`);
+    assert(isOptionalString(task.level), `tasks[${i}].level must be a string`);
   });
   if (settings.notifications !== undefined) validateNotifications(settings.notifications);
-  assert(isStringArray(settings.saeNames ?? []), "saeNames must be an array of strings");
+  assert(isStringArray(settings.projectSubjects ?? []), "projectSubjects must be an array of strings");
+  assert(isStringArray(settings.planning?.departments ?? []), "planning.departments must be an array of strings");
   assert(isStringArray(settings.adminRoles ?? []), "adminRoles must be an array of role IDs");
   assert(settings.channels && typeof settings.channels === "object", "channels is required");
   assert(settings.appearance && typeof settings.appearance === "object", "appearance is required");
@@ -89,21 +93,19 @@ function notify() {
   for (const listener of listeners) listener(current);
 }
 
-// Temp file then rename: never a half-written file.
 function writeSettings(next) {
+  migrateSettings(next);
   validateSettings(next);
-  const tmpPath = `${SETTINGS_PATH}.tmp`;
-  fs.writeFileSync(tmpPath, JSON.stringify(next, null, 2) + "\n", "utf8");
-  fs.renameSync(tmpPath, SETTINGS_PATH);
+  writeJsonAtomic(SETTINGS_PATH, next);
   current = next;
   notify();
   return current;
 }
 
 // Restart required: read once at startup.
-const config = readJson(CONFIG_PATH);
+const config = readConfigFile(CONFIG_PATH);
 
-let current = validateSettings(readJson(SETTINGS_PATH));
+let current = validateSettings(readConfigFile(SETTINGS_PATH));
 const listeners = new Set();
 
 const settings = {
@@ -111,7 +113,9 @@ const settings = {
 
   // Invalid files throw and keep previous settings.
   reload() {
-    current = validateSettings(readJson(SETTINGS_PATH));
+    const next = readConfigFile(SETTINGS_PATH);
+    migrateSettings(next);
+    current = validateSettings(next);
     notify();
     return current;
   },

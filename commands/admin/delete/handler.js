@@ -1,35 +1,35 @@
-const { promptGroup, promptDevoir } = require("../../../utilities/DevoirPrompts");
+const { promptGroup, promptAssignment } = require("../../../utilities/AssignmentPrompts");
 
-async function handler(interaction, { t, interacting, logger, devoirManager, EmbedFormManager, user }) {
+async function handler(interaction, { t, interacting, logger, assignmentManager, EmbedFormManager, user }) {
   const form = new EmbedFormManager(interaction, interacting);
 
-  const groupChoice = await promptGroup(form, devoirManager, interaction.id);
+  const groupChoice = await promptGroup(form, assignmentManager, interaction.id);
   if (!groupChoice) return;
   const { group } = groupChoice;
 
-  const devoirChoice = await promptDevoir(
+  const assignmentChoice = await promptAssignment(
     form,
     group,
-    devoirManager.loadDevoirs(group),
+    assignmentManager.loadAssignments(group),
     interaction.id,
     t("delete.selectTitle"),
     groupChoice.interaction,
   );
-  if (!devoirChoice) return;
-  const { devoir, interaction: selection } = devoirChoice;
+  if (!assignmentChoice) return;
+  const { assignment, interaction: selection } = assignmentChoice;
 
-  if (!devoirManager.deleteDevoir({ group, id: devoir.id })) {
+  if (!assignmentManager.deleteAssignment({ group, id: assignment.id })) {
     return form
-      .createEmbed(t("delete.notFound.title"), t("delete.notFound.description", { id: devoir.id, group }), "danger")
+      .createEmbed(t("delete.notFound.title"), t("delete.notFound.description", { id: assignment.id, group }), "danger")
       .clearComponents()
       .update(selection);
   }
 
-  logger.logMessage(`[ SUCCESS ] Assignment ${devoir.id} deleted from ${group} by ${user.username}`);
+  logger.logMessage(`[ SUCCESS ] Assignment ${assignment.id} deleted from ${group} by ${user.username}`);
   await form
     .createEmbed(
       t("delete.success.title"),
-      t("delete.success.description", { title: devoir.devoir, id: devoir.id, group }),
+      t("delete.success.description", { title: assignment.title, id: assignment.id, group }),
       "success",
     )
     .clearComponents()

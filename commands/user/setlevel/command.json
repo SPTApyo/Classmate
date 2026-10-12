@@ -1,0 +1,9 @@
+{
+  "name": "{{commandName}}",
+  "description": "Sets your level (year of study)",
+  "description_localizations": {
+    "fr": "Définit ton niveau (année d'études)"
+  },
+  "type": 1,
+  "options": []
+}

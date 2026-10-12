@@ -4,10 +4,10 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const LOCALES = ["en", "fr"];
-const SOURCE_DIRS = ["index.js", "commands", "LLMEngine", "utilities"];
+const SOURCE_DIRS = ["index.js", "commands", "assistant", "utilities"];
 // Matches t("key"), translate("key") and userError("key").
 const KEY_CALL = /\b(?:t|translate|userError)\(\s*["'`]([a-zA-Z0-9_.]+)["'`]/g;
-const PROFILE_FIELDS = ["dept", "train_prog", "group"];
+const PROFILE_FIELDS = ["dept", "level", "group"];
 const PROFILE_KEYS = [
   "selectTitle",
   "selectPrompt",
@@ -17,7 +17,6 @@ const PROFILE_KEYS = [
   "timeoutText",
   "errorText",
 ];
-const FLOORS = ["ground", "first", "second", "other"];
 
 function flatten(node, prefix = "") {
   return Object.entries(node).flatMap(([key, value]) =>
@@ -52,11 +51,8 @@ for (const locale of others) {
   }
 }
 
-// Dynamic keys built from field and floor names.
-const usedKeys = new Set([
-  ...PROFILE_FIELDS.flatMap((field) => PROFILE_KEYS.map((key) => `profile.${field}.${key}`)),
-  ...FLOORS.map((floor) => `getroom.floor.${floor}`),
-]);
+// Dynamic keys built from profile field names.
+const usedKeys = new Set([...PROFILE_FIELDS.flatMap((field) => PROFILE_KEYS.map((key) => `profile.${field}.${key}`))]);
 for (const file of (await Promise.all(SOURCE_DIRS.map(listSources))).flat()) {
   for (const [, key] of (await readFile(file, "utf8")).matchAll(KEY_CALL)) usedKeys.add(key);
 }

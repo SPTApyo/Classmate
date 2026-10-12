@@ -104,7 +104,7 @@ async function askQuestion(interaction, t, q, index) {
 }
 
 async function handler(interaction, deps) {
-  const { t, llm, logger, interacting, permissions, checkRateLimit, downloadAttachment } = deps;
+  const { t, assistant, logger, interacting, permissions, checkRateLimit, downloadAttachment } = deps;
   const attachment = interaction.options.getAttachment("file");
   const topic = interaction.options.getString("topic");
   const count = interaction.options.getInteger("count") ?? DEFAULT_COUNT;
@@ -127,7 +127,7 @@ async function handler(interaction, deps) {
 
     const language = t.locale === "fr" ? "French" : "English";
     const prompt = buildPrompt({ topic, source, count, language });
-    const { data } = await llm.generateJson(prompt, QUIZ_SCHEMA, MAX_OUTPUT_TOKENS);
+    const { data } = await assistant.generateJson(prompt, QUIZ_SCHEMA, MAX_OUTPUT_TOKENS);
     const questions = validQuestions(data, count);
     if (questions.length === 0) return interaction.editReply(t("quiz.failed"));
 

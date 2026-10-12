@@ -2,5 +2,5 @@ const { createProfileFieldHandler } = require("../../../utilities/ProfileFieldCo
 
 module.exports = createProfileFieldHandler({
   field: "group",
-  getChoices: ({ devoirManager }) => devoirManager.getAllGroups(),
+  getChoices: ({ assignmentManager }) => assignmentManager.getAllGroups(),
 });

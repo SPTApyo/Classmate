@@ -1,16 +1,16 @@
 const LIST_TIMEOUT_MS = 2 * 60 * 1000;
 
-function formatDevoirs(t, devoirs) {
-  if (devoirs.length === 0) return t("list.empty");
-  return devoirs
+function formatAssignments(t, assignments) {
+  if (assignments.length === 0) return t("list.empty");
+  return assignments
     .map((d) =>
-      t("list.item", { id: d.id, title: d.devoir, subject: d.matiere, date: d.date, addedBy: d.addedBy || "?" }),
+      t("list.item", { id: d.id, title: d.title, subject: d.subject, date: d.date, addedBy: d.addedBy || "?" }),
     )
     .join("\n\n");
 }
 
-async function handler(interaction, { t, interacting, devoirManager, EmbedFormManager }) {
-  const groups = devoirManager.getAllGroups();
+async function handler(interaction, { t, interacting, assignmentManager, EmbedFormManager }) {
+  const groups = assignmentManager.getAllGroups();
   if (groups.length === 0) return interacting.replyToInteraction(interaction, t("common.noGroups"));
 
   const form = new EmbedFormManager(interaction, interacting);
@@ -28,7 +28,7 @@ async function handler(interaction, { t, interacting, devoirManager, EmbedFormMa
     hasSelected = true;
     const group = selection.values[0];
     await form
-      .createEmbed(t("list.title", { group }), formatDevoirs(t, devoirManager.loadDevoirs(group)), "info")
+      .createEmbed(t("list.title", { group }), formatAssignments(t, assignmentManager.loadAssignments(group)), "info")
       .clearComponents()
       .addDropdown(selectId, t("prompts.selectGroup.placeholder"), options)
       .update(selection);

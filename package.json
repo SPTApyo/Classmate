@@ -1,6 +1,6 @@
 {
-  "name": "iut_assitant",
-  "Appversion": "1.7.0 - **RH0**",
+  "name": "classmate",
+  "version": "1.8.0",
   "private": true,
   "main": "index.js",
   "engines": {
@@ -30,17 +30,20 @@
   "keywords": [
     "discord",
     "bot",
-    "gemini",
+    "assistant",
+    "students",
     "moodle",
-    "iut"
+    "ics",
+    "timetable",
+    "gemini"
   ],
   "author": "_APYO",
   "designer": {
     "discordId": "437315912614281220",
     "username": "_apyo"
   },
-  "license": "ISC",
-  "description": "Discord bot for IUT Blagnac: Moodle assignment reminders and a Gemini-powered assistant",
+  "license": "GPL-3.0-or-later",
+  "description": "Discord bot for a class: calendar deadline reminders, timetable watch and an AI assistant",
   "dependencies": {
     "@google/genai": "^1.52.0",
     "axios": "^1.11.0",
@@ -59,5 +62,13 @@
     "husky": "^9.1.7",
     "lint-staged": "^16.4.0",
     "prettier": "^3.9.9"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SPTApyo/classmate.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SPTApyo/classmate/issues"
+  },
+  "homepage": "https://github.com/SPTApyo/classmate#readme"
 }

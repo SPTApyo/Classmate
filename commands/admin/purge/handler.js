@@ -3,8 +3,8 @@ const { ButtonStyle } = require("discord.js");
 const CONFIRM_TIMEOUT_MS = 15000;
 const ALL_GROUPS = "ALL";
 
-async function handler(interaction, { t, interacting, logger, devoirManager, user, EmbedFormManager }) {
-  const groups = devoirManager.getAllGroups();
+async function handler(interaction, { t, interacting, logger, assignmentManager, user, EmbedFormManager }) {
+  const groups = assignmentManager.getAllGroups();
   if (groups.length === 0) return interacting.replyToInteraction(interaction, t("purge.noGroups"));
 
   const form = new EmbedFormManager(interaction, interacting);
@@ -45,7 +45,7 @@ async function handler(interaction, { t, interacting, logger, devoirManager, use
       .update(choice);
   }
 
-  devoirManager.purgeGroups(targets);
+  assignmentManager.purgeGroups(targets);
   logger.logMessage(`[ SUCCESS ] Assignments purged (${targets.join(", ")}) by ${user.username}`);
   await form
     .createEmbed(t("purge.done.title"), t("purge.done.description", { scope }), "success")

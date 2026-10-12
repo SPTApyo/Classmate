@@ -1,6 +1,6 @@
-async function handler(interaction, { t, interacting, logger, devoirManager, user }) {
+async function handler(interaction, { t, interacting, logger, assignmentManager, user }) {
   try {
-    devoirManager.regenerateIds();
+    assignmentManager.regenerateIds();
     logger.logMessage(`[ SUCCESS ] Assignment IDs renumbered by ${user.username}`);
     await interacting.replyToInteraction(interaction, t("regenerate.success"));
   } catch (error) {

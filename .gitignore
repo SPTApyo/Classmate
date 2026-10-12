@@ -14,7 +14,7 @@ data/config/config.json
 data/config/settings.json
 
 # Runtime data (Docker volumes)
-data/devoirs/
+data/assignments/
 data/user_data/
 
 # Personal files

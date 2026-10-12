@@ -5,10 +5,12 @@ const axios = require("axios");
 const { fromRoot } = require("./utilities/paths");
 const moduleRegistry = require("./utilities/moduleRegistry");
 
-// Missing config must fail with one readable line.
+// Bad data must fail with one readable line.
 function loadConfiguration() {
   try {
-    return require("./utilities/config");
+    const migrated = require("./utilities/migrateLegacyData").migrateLegacyData();
+    const fromEnv = require("./utilities/envOverrides").applyEnvOverrides();
+    return { migrated, fromEnv, ...require("./utilities/config") };
   } catch (error) {
     console.error(`[ ERROR ] ${error.message}`);
     process.exit(1);
@@ -16,19 +18,19 @@ function loadConfiguration() {
 }
 
 require("dotenv").config({ path: fromRoot("data", "keys", ".env") });
-const { config, settings } = loadConfiguration();
+const { migrated, fromEnv, config, settings } = loadConfiguration();
 const permissions = require("./utilities/permissions");
 const identity = require("./utilities/identity");
 const app = require("./package.json");
-const DevoirManager = require("./utilities/DevoirManager");
+const AssignmentManager = require("./utilities/AssignmentManager");
 const Logger = require("./utilities/Logger");
 const Interacting = require("./utilities/interacting");
-const LLMClient = require("./LLMEngine/llm");
-const AmbientEngine = require("./LLMEngine/ambient/AmbientEngine");
-const { isDirectTrigger } = require("./LLMEngine/ambient/heuristics");
-const LLMDataManager = require("./LLMEngine/LLMDataManager/LLMDataManager");
+const Assistant = require("./assistant/Assistant");
+const AmbientEngine = require("./assistant/ambient/AmbientEngine");
+const { isDirectTrigger } = require("./assistant/ambient/heuristics");
+const AssistantStore = require("./assistant/AssistantStore");
 const EmbedFormManager = require("./utilities/EmbedFormManager");
-const PlanningApi = require("./LLMEngine/external/schedule/planningApi");
+const TimetableApi = require("./utilities/TimetableApi");
 const CommandDeployer = require("./utilities/CommandDeployer");
 const Notifier = require("./utilities/Notifier");
 const { translator, userError, describeUserError } = require("./utilities/i18n");
@@ -45,11 +47,11 @@ const client = new Client({
 identity.setClient(client);
 const logger = new Logger(client);
 const interacting = new Interacting(logger);
-const devoirManager = new DevoirManager(logger);
-const llmDataManager = new LLMDataManager(logger);
+const assignmentManager = new AssignmentManager(logger);
+const assistantStore = new AssistantStore(logger);
 
 let booted = false;
-let llm = null;
+let assistant = null;
 let ambient = null;
 let notifier = null;
 
@@ -163,14 +165,14 @@ async function downloadAttachment(attachment) {
   return { buffer: Buffer.from(response.data), filename: attachment.name };
 }
 
-async function addUserToLLMData(userId, { pseudo, group, alias, dept, train_prog, silent = false } = {}) {
+async function saveUserProfile(userId, { username, group, alias, dept, level, silent = false } = {}) {
   if (!userId || typeof userId !== "string") return null;
-  if (!pseudo) {
+  if (!username) {
     const user = await client.users.fetch(userId).catch(() => null);
-    pseudo = user?.username || userId;
+    username = user?.username || userId;
   }
   try {
-    return llmDataManager.upsertUser({ userId, pseudo, group, alias, dept, train_prog, silent });
+    return assistantStore.upsertUser({ userId, username, group, alias, dept, level, silent });
   } catch (e) {
     logger.logMessage(`[ ERROR ] Failed to save user ${userId}`, e);
     return null;
@@ -189,7 +191,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   if (!booted || !interaction.isChatInputCommand()) return;
   const { commandName, user } = interaction;
   const t = translator(interaction);
-  addUserToLLMData(user.id, { pseudo: user.username, silent: true });
+  saveUserProfile(user.id, { username: user.username, silent: true });
   logger.logMessage(`[ NOTICE ] /${commandName} used by ${user.username}`);
 
   const resolved = resolveCommandHandler(commandName);
@@ -208,20 +210,20 @@ client.on(Events.InteractionCreate, async (interaction) => {
     user,
     logger,
     interacting,
-    llm,
+    assistant,
     client,
     config,
     settings,
     permissions,
     app,
-    devoirManager,
-    llmDataManager,
-    addUserToLLMData,
+    assignmentManager,
+    assistantStore,
+    saveUserProfile,
     notifier,
     checkAllGroups: () => notifier.checkAllGroups(),
     checkRateLimit,
     EmbedFormManager,
-    PlanningApi,
+    TimetableApi,
     SAFE_MENTIONS,
     downloadAttachment,
     smartChunk,
@@ -294,7 +296,7 @@ async function handleAssistantMessage(message, extraContext = "") {
 
   try {
     // No retry here: executed actions must not replay.
-    const response = await llm.generateContent(message.content, message, context, fileObj);
+    const response = await assistant.generateContent(message.content, message, context, fileObj);
     await cleanup();
     await sendChunkedReply(message, response);
   } catch (err) {
@@ -306,7 +308,7 @@ async function handleAssistantMessage(message, extraContext = "") {
 
 client.on(Events.MessageCreate, async (message) => {
   if (!booted || message.author.bot) return;
-  addUserToLLMData(message.author.id, { pseudo: message.author.username, silent: true });
+  saveUserProfile(message.author.id, { username: message.author.username, silent: true });
   const inAssistantChannel = message.channel.id === settings.get().channels.assistant;
   const directCall = !inAssistantChannel && isDirectTrigger(message, identity.botName(), client.user.id);
   if (!inAssistantChannel && !directCall) {
@@ -330,6 +332,8 @@ function runDailyMaintenance() {
 
 client.once(Events.ClientReady, async () => {
   logger.logMessage(`[ SUCCESS ] Logged in as ${client.user.tag}`);
+  if (migrated.length > 0) logger.logMessage(`[ NOTICE ] Migrated 1.7 data: ${migrated.join(", ")}`);
+  if (fromEnv.length > 0) logger.logMessage(`[ NOTICE ] Set from the environment: ${fromEnv.join(", ")}`);
   const owners = await permissions.loadOwners(client).catch((error) => {
     logger.logMessage("[ ERROR ] Failed to fetch the application owner", error);
     return [];
@@ -337,26 +341,26 @@ client.once(Events.ClientReady, async () => {
   logger.logMessage(`[ NOTICE ] Bot owner(s): ${owners.join(", ") || "none"}`);
   await new CommandDeployer(logger, client).deploy();
 
-  devoirManager.init();
-  settings.onChange(() => devoirManager.init());
+  assignmentManager.init();
+  settings.onChange(() => assignmentManager.init());
   settings.watch(logger);
-  llm = new LLMClient(logger, client, devoirManager);
+  assistant = new Assistant(logger, client, assignmentManager);
   ambient = new AmbientEngine({
     client,
-    llm,
+    assistant,
     logger,
     settings,
-    llmDataManager,
+    assistantStore,
     respond: (message, context) => handleAssistantMessage(message, context),
   });
-  llm.ambient = ambient;
+  assistant.ambient = ambient;
   notifier = new Notifier({
     client,
     logger,
     settings,
-    devoirManager,
-    llmDataManager,
-    planningApi: new PlanningApi(),
+    assignmentManager,
+    assistantStore,
+    timetableApi: new TimetableApi(),
     interacting,
   });
   booted = true;

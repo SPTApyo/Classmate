@@ -1,24 +1,38 @@
 services:
   bot:
     build: .
-    image: iut_assistant:latest
+    image: apyo37/classmate:${TAG:-latest}
     restart: unless-stopped
+    environment:
+      # Reminders and the evening brief follow this time zone.
+      TZ: ${TZ:-UTC}
+      # Any setting can be set here, see docs/configuration.md:
+      # DISCORD_TOKEN: ...
+      # GEMINI_API_KEY: ...
+      # CONFIG__guildId: "123456789012345678"
+      # SETTINGS__assistantName: Atlas
+      # SETTINGS__defaultLocale: fr
+      # SETTINGS__tasks__0__group: 1A
+      # SETTINGS__tasks__0__icsUrl: https://moodle.example.edu/calendar/export_execute.php?...
+      # SETTINGS__tasks__0__reminderChannelId: "123456789012345678"
+      # SETTINGS__projectSubjects: '["Project A","Project B"]'
+      # PERSONA__thinkingLevel: low
     depends_on:
       - converter
     networks:
       - default
       - converter
     volumes:
-      - ./log:/home/node/IUT_Assistant/log
-      - ./data/config:/home/node/IUT_Assistant/data/config
-      - ./data/devoirs:/home/node/IUT_Assistant/data/devoirs
-      - ./data/keys:/home/node/IUT_Assistant/data/keys
-      - ./data/user_data:/home/node/IUT_Assistant/data/user_data
+      - ./log:/app/log
+      - ./data/config:/app/data/config
+      - ./data/assignments:/app/data/assignments
+      - ./data/keys:/app/data/keys
+      - ./data/user_data:/app/data/user_data
 
   # Parses untrusted files: no internet, read-only, capped.
   converter:
     build: ./converter
-    image: iut_assistant_converter:latest
+    image: apyo37/classmate-converter:${TAG:-latest}
     restart: unless-stopped
     networks:
       - converter

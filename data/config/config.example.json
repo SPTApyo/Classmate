@@ -5,7 +5,11 @@
     "dataDirectory": "./data"
   },
   "planning": {
-    "apiBaseUrl": "https://flopstudent-api.belucraft.fr"
+    "apiBaseUrl": "<TIMETABLE_API_URL>",
+    "paths": {
+      "schedules": "/api/get-schedules",
+      "freeRooms": "/api/get-free-rooms"
+    }
   },
   "converter": {
     "url": "http://converter:8080"

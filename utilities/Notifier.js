@@ -2,14 +2,15 @@ const fs = require("fs");
 const moment = require("moment");
 const ical = require("ical");
 
-const DevoirManager = require("./DevoirManager");
+const AssignmentManager = require("./AssignmentManager");
 const Health = require("./health");
 const permissions = require("./permissions");
 const { translator } = require("./i18n");
 const { sendDM } = require("./dm");
 const { fromRoot } = require("./paths");
+const { writeJsonAtomic } = require("./jsonFile");
 
-const STATE_PATH = fromRoot("data", "devoirs", "notifier-state.json");
+const STATE_PATH = fromRoot("data", "assignments", "notifier-state.json");
 const TICK_MS = 60 * 1000;
 const HOUR_MS = 60 * 60 * 1000;
 const DAILY_DIGEST_HOUR = 6;
@@ -18,7 +19,10 @@ const ICS_TIMEOUT_MS = 30000;
 const EMBED_DESCRIPTION_LIMIT = 4096;
 const MESSAGE_LIMIT = 2000;
 const MAX_LISTED_CHANGES = 15;
-const DIGEST_SECTIONS = ["devoirs", "qcm", "sae"];
+const DIGEST_SECTIONS = ["assignments", "quizzes", "projects"];
+// Moodle exports event titles in the site language.
+const OPENS_MARKERS = ["s'ouvre", "opens"];
+const CLOSES_MARKERS = ["se termine", "closes"];
 const DAY_NUMBERS = { m: 1, tu: 2, w: 3, th: 4, f: 5, sa: 6, su: 7 };
 const NO_MENTIONS = { parse: [] };
 
@@ -32,7 +36,8 @@ const DEFAULTS = {
 
 const isTestMode = () => process.env.PROCESS_TEST_MODE === "1";
 const unix = (ms) => Math.floor(ms / 1000);
-const isTimed = (devoir) => Number.isFinite(devoir.due);
+const isTimed = (assignment) => Number.isFinite(assignment.due);
+const hasMarker = (title, markers) => markers.some((marker) => title.toLowerCase().includes(marker));
 const sameGroup = (a, b) => String(a || "").toUpperCase() === String(b || "").toUpperCase();
 
 // Moodle noise: DEADLINE, week numbers, times.
@@ -92,8 +97,26 @@ function packLines(header, lines, limit = MESSAGE_LIMIT) {
 }
 
 class Notifier {
-  constructor({ client, logger, settings, devoirManager, llmDataManager, planningApi, interacting, now = Date.now }) {
-    Object.assign(this, { client, logger, settings, devoirManager, llmDataManager, planningApi, interacting, now });
+  constructor({
+    client,
+    logger,
+    settings,
+    assignmentManager,
+    assistantStore,
+    timetableApi,
+    interacting,
+    now = Date.now,
+  }) {
+    Object.assign(this, {
+      client,
+      logger,
+      settings,
+      assignmentManager,
+      assistantStore,
+      timetableApi,
+      interacting,
+      now,
+    });
     this.state = this.loadState();
     this.running = new Set();
     this.lastRun = {};
@@ -115,9 +138,7 @@ class Notifier {
 
   saveState() {
     try {
-      const tmpPath = `${STATE_PATH}.tmp`;
-      fs.writeFileSync(tmpPath, JSON.stringify(this.state, null, 2));
-      fs.renameSync(tmpPath, STATE_PATH);
+      writeJsonAtomic(STATE_PATH, this.state);
     } catch (error) {
       this.logger.logMessage("[ ERROR ] Failed to save the notifier state", error);
     }
@@ -172,8 +193,8 @@ class Notifier {
   }
 
   async runDaily() {
-    this.devoirManager.removeExpiredDevoirs();
-    this.devoirManager.sortDevoirs();
+    this.assignmentManager.removeExpired();
+    this.assignmentManager.sortAssignments();
     await this.sendDigests();
     await this.onDaily?.();
   }
@@ -250,32 +271,33 @@ class Notifier {
 
   async syncGroup(task) {
     const events = await this.fetchCalendar(task);
-    const threshold = DevoirManager.expiryThreshold();
+    const threshold = AssignmentManager.expiryThreshold();
     const created = [];
     for (const event of events) {
-      if (event.type !== "VEVENT" || !event.summary || !event.end || !event.categories) continue;
+      if (event.type !== "VEVENT" || !event.summary || !event.end) continue;
       if (moment(event.end).isBefore(threshold)) continue;
       const title = cleanEventTitle(event.summary);
       // Moodle "opens" events are not deadlines.
-      if (!title || title.toLowerCase().includes("s'ouvre")) continue;
+      if (!title || hasMarker(title, OPENS_MARKERS)) continue;
 
       const end = moment(event.end);
-      const result = this.devoirManager.addDevoir({
+      const result = this.assignmentManager.addAssignment({
         group: task.group,
-        devoir: title,
-        matiere: Array.isArray(event.categories) ? event.categories.join(", ") : event.categories,
-        date: end.format(DevoirManager.DATE_FORMAT),
+        title,
+        // Only Moodle fills categories with the course.
+        subject: [event.categories].flat().filter(Boolean).join(", ") || task.group,
+        date: end.format(AssignmentManager.DATE_FORMAT),
         due: end.valueOf(),
-        addedBy: "Moodle",
+        addedBy: "Calendar",
       });
-      if (result.created) created.push(result.devoir);
+      if (result.created) created.push(result.assignment);
     }
     return created;
   }
 
   async syncAll() {
     for (const task of this.settings.get().tasks) {
-      const key = `Moodle calendar ${task.group}`;
+      const key = `Calendar ${task.group}`;
       let created;
       try {
         created = await this.syncGroup(task);
@@ -292,7 +314,7 @@ class Notifier {
         this.saveState();
         continue;
       }
-      const upcoming = created.filter((devoir) => DevoirManager.dueOf(devoir) > this.now());
+      const upcoming = created.filter((assignment) => AssignmentManager.dueOf(assignment) > this.now());
       if (this.options().newAssignments && upcoming.length > 0) {
         await this.announceNew(task, upcoming).catch((error) =>
           this.logger.logMessage(`[ ERROR ] Failed to announce new assignments for ${task.group}`, error),
@@ -301,28 +323,32 @@ class Notifier {
     }
   }
 
-  when(devoir) {
-    if (!isTimed(devoir)) return devoir.date;
-    return `<t:${unix(devoir.due)}:f> (<t:${unix(devoir.due)}:R>)`;
+  when(assignment) {
+    if (!isTimed(assignment)) return assignment.date;
+    return `<t:${unix(assignment.due)}:f> (<t:${unix(assignment.due)}:R>)`;
   }
 
-  itemLine(t, devoir) {
-    return t("notifications.item", { title: devoir.devoir, subject: devoir.matiere, when: this.when(devoir) });
+  itemLine(t, assignment) {
+    return t("notifications.item", {
+      title: assignment.title,
+      subject: assignment.subject,
+      when: this.when(assignment),
+    });
   }
 
-  async announceNew(task, devoirs) {
+  async announceNew(task, assignments) {
     const t = translator();
     await this.post(task, "announce", {
       header: t("notifications.newAssignments", { group: task.group }),
-      lines: devoirs.map((devoir) => this.itemLine(t, devoir)),
+      lines: assignments.map((assignment) => this.itemLine(t, assignment)),
     });
   }
 
   // Date-only assignments: evening before, never hours.
-  alertTime(devoir, hours) {
-    if (isTimed(devoir)) return devoir.due - hours * HOUR_MS;
+  alertTime(assignment, hours) {
+    if (isTimed(assignment)) return assignment.due - hours * HOUR_MS;
     if (hours < 24) return null;
-    return moment(devoir.date, DevoirManager.DATE_FORMAT)
+    return moment(assignment.date, AssignmentManager.DATE_FORMAT)
       .subtract(Math.round(hours / 24), "days")
       .hour(UNTIMED_ALERT_HOUR)
       .startOf("hour")
@@ -334,17 +360,17 @@ class Notifier {
     const hours = this.options().deadlineHours;
     const now = this.now();
     const due = [];
-    this.devoirManager.updateDevoirs(group, (devoirs) => {
-      for (const devoir of devoirs) {
-        if (DevoirManager.dueOf(devoir) <= now) continue;
-        const alerted = devoir.alerted || [];
+    this.assignmentManager.updateAssignments(group, (assignments) => {
+      for (const assignment of assignments) {
+        if (AssignmentManager.dueOf(assignment) <= now) continue;
+        const alerted = assignment.alerted || [];
         const reached = hours.filter((h) => {
-          const at = this.alertTime(devoir, h);
+          const at = this.alertTime(assignment, h);
           return !alerted.includes(h) && at !== null && now >= at;
         });
         if (reached.length === 0) continue;
-        devoir.alerted = [...alerted, ...reached];
-        due.push(devoir);
+        assignment.alerted = [...alerted, ...reached];
+        due.push(assignment);
       }
       return due.length > 0;
     });
@@ -360,7 +386,7 @@ class Notifier {
       try {
         await this.post(task, "announce", {
           header: t("notifications.deadline", { group: task.group }),
-          lines: due.map((devoir) => this.itemLine(t, devoir)),
+          lines: due.map((assignment) => this.itemLine(t, assignment)),
           ping: true,
         });
         this.logger.logMessage(`[ SUCCESS ] Sent ${due.length} deadline alert(s) for group ${task.group}`);
@@ -372,23 +398,23 @@ class Notifier {
   }
 
   // Closed DMs turn the subscription off.
-  async sendReminderDMs(task, devoirs) {
+  async sendReminderDMs(task, assignments) {
     const t = translator();
-    const subscribers = this.llmDataManager
+    const subscribers = this.assistantStore
       .getUsers()
       .filter((user) => user.dmReminders && sameGroup(user.group, task.group));
     for (const user of subscribers) {
       const done = new Set(user.done || []);
-      const pending = devoirs.filter((devoir) => !done.has(DevoirManager.keyOf(devoir)));
+      const pending = assignments.filter((assignment) => !done.has(AssignmentManager.keyOf(assignment)));
       if (pending.length === 0) continue;
       const [content] = packLines(
         t("notifications.dm.deadline", { group: task.group }),
-        pending.map((devoir) => this.itemLine(t, devoir)),
+        pending.map((assignment) => this.itemLine(t, assignment)),
       );
       const result = await sendDM(this.client, user.userId, { content, allowedMentions: NO_MENTIONS });
       if (result.ok) continue;
       if (result.closed) {
-        this.llmDataManager.setUserField(user.userId, "dmReminders", false);
+        this.assistantStore.setUserField(user.userId, "dmReminders", false);
         this.logger.logMessage(`[ NOTICE ] DM reminders disabled for ${user.userId}: DMs are closed`);
       } else {
         this.logger.logMessage(`[ ERROR ] Failed to DM reminder to ${user.userId}`, result.error);
@@ -396,11 +422,9 @@ class Notifier {
     }
   }
 
-  isSAE(devoir) {
-    return (
-      /^s\d+/i.test(devoir.devoir.trim()) ||
-      (this.settings.get().saeNames || []).some((name) => devoir.matiere.toLowerCase().includes(name.toLowerCase()))
-    );
+  isProject(assignment) {
+    const subject = assignment.subject.toLowerCase();
+    return (this.settings.get().projectSubjects || []).some((name) => subject.includes(name.toLowerCase()));
   }
 
   formatRemaining(t, daysRemaining) {
@@ -412,20 +436,20 @@ class Notifier {
 
   buildSections(t, group) {
     const today = moment(this.now()).startOf("day");
-    const sections = { devoirs: "", qcm: "", sae: "" };
-    for (const devoir of this.devoirManager.loadDevoirs(group)) {
-      const daysRemaining = moment(devoir.date, DevoirManager.DATE_FORMAT).startOf("day").diff(today, "days");
+    const sections = { assignments: "", quizzes: "", projects: "" };
+    for (const assignment of this.assignmentManager.loadAssignments(group)) {
+      const daysRemaining = moment(assignment.date, AssignmentManager.DATE_FORMAT).startOf("day").diff(today, "days");
       const item =
         t("reminders.item", {
-          title: devoir.devoir,
-          subject: devoir.matiere,
-          date: isTimed(devoir) ? `<t:${unix(devoir.due)}:f>` : devoir.date,
-          remaining: isTimed(devoir) ? `<t:${unix(devoir.due)}:R>` : this.formatRemaining(t, daysRemaining),
+          title: assignment.title,
+          subject: assignment.subject,
+          date: isTimed(assignment) ? `<t:${unix(assignment.due)}:f>` : assignment.date,
+          remaining: isTimed(assignment) ? `<t:${unix(assignment.due)}:R>` : this.formatRemaining(t, daysRemaining),
         }) + "\n\n";
       const withinMonth = daysRemaining <= 31 && daysRemaining >= -2;
-      if (devoir.devoir.toLowerCase().includes("se termine") && withinMonth) sections.qcm += item;
-      else if (this.isSAE(devoir) && withinMonth) sections.sae += item;
-      else if (daysRemaining <= 7 && daysRemaining >= -2) sections.devoirs += item;
+      if (hasMarker(assignment.title, CLOSES_MARKERS) && withinMonth) sections.quizzes += item;
+      else if (this.isProject(assignment) && withinMonth) sections.projects += item;
+      else if (daysRemaining <= 7 && daysRemaining >= -2) sections.assignments += item;
     }
     return sections;
   }
@@ -459,9 +483,9 @@ class Notifier {
     const t = translator();
     const sections = this.buildSections(t, group);
     const colors = {
-      devoirs: appearance.embedDevoirsColor,
-      qcm: appearance.embedQCMColor,
-      sae: appearance.embedSAEColor,
+      assignments: appearance.embedAssignmentsColor,
+      quizzes: appearance.embedQuizzesColor,
+      projects: appearance.embedProjectsColor,
     };
     const embedFor = (key) => {
       const content = sections[key];
@@ -498,14 +522,14 @@ class Notifier {
 
   planningTarget(task) {
     const dept = this.settings.get().planning?.defaultDept;
-    if (!task.trainProg || !dept) return null;
-    return { dept, train_prog: task.trainProg, groupe: task.group };
+    if (!task.level || !dept) return null;
+    return { dept, level: task.level, group: task.group };
   }
 
   async fetchCourses(target, date) {
     const week = { year: date.isoWeekYear(), week: date.isoWeek() };
     try {
-      const courses = await this.planningApi.getCourses({ ...target, ...week });
+      const courses = await this.timetableApi.getCourses({ ...target, ...week });
       await this.health.ok("Planning API");
       return { week, courses };
     } catch (error) {

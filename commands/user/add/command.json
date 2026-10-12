@@ -47,9 +47,9 @@
       "name_localizations": {
         "fr": "date"
       },
-      "description": "Due date (DD-MM-YYYY)",
+      "description": "Due date (YYYY-MM-DD)",
       "description_localizations": {
-        "fr": "Date limite (JJ-MM-AAAA)"
+        "fr": "Date limite (AAAA-MM-JJ)"
       },
       "type": 3,
       "required": true

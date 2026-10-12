@@ -6,9 +6,9 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const OUT = path.join(ROOT, "dist");
-const MODULE_DIRS = ["commands", "LLMEngine/actions"];
+const MODULE_DIRS = ["commands", "assistant/actions"];
 // Templates; real files live in the volume.
-const DEFAULT_FILES = ["llmData.json", "config.example.json", "settings.example.json"];
+const DEFAULT_FILES = ["persona.json", "config.example.json", "settings.example.json"];
 // Optional native addons, loaded inside try/catch.
 const OPTIONAL_NATIVE = ["bufferutil", "utf-8-validate", "zlib-sync", "erlpack"];
 

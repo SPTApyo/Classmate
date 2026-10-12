@@ -1,5 +1,6 @@
 const DAY_KEYS = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
-const FLOOR_COLORS = { ground: "2ecc71", first: "e67e22", second: "e74c3c", other: "95a5a6" };
+const FLOOR_COLORS = ["2ecc71", "e67e22", "e74c3c", "9b59b6", "3498db"];
+const OTHER_COLOR = "95a5a6";
 
 function getWeekNumber(date) {
   const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
@@ -14,13 +15,13 @@ function parseSlot(label) {
   return match ? Number(match[1]) * 60 + Number(match[2]) : null;
 }
 
-async function handler(interaction, { t, user, logger, interacting, PlanningApi, settings }) {
+async function handler(interaction, { t, user, logger, interacting, TimetableApi, settings }) {
   try {
     const now = new Date();
-    const { rooms } = await new PlanningApi().getFreeRooms({
+    const { rooms } = await new TimetableApi().getFreeRooms({
       year: now.getFullYear(),
       week: getWeekNumber(now),
-      dept: settings.get().planning?.defaultDept || "INFO",
+      dept: settings.get().planning?.defaultDept,
     });
     const slots = rooms[DAY_KEYS[now.getDay()]];
     if (!slots || Object.keys(slots).length === 0) {
@@ -39,13 +40,11 @@ async function handler(interaction, { t, user, logger, interacting, PlanningApi,
 
     const embeds = Object.entries(slots[closest.label])
       .filter(([, list]) => list.length > 0)
-      .map(([floor, list]) =>
-        interacting.createEmbed(
-          t(`getroom.floor.${floor}`),
-          list.join(", "),
-          FLOOR_COLORS[floor] || FLOOR_COLORS.other,
-        ),
-      );
+      .map(([floor, list]) => {
+        if (floor === "other") return interacting.createEmbed(t("getroom.floor.other"), list.join(", "), OTHER_COLOR);
+        const title = floor === "0" ? t("getroom.floor.ground") : t("getroom.floor.numbered", { floor });
+        return interacting.createEmbed(title, list.join(", "), FLOOR_COLORS[Number(floor) % FLOOR_COLORS.length]);
+      });
     if (embeds.length === 0) {
       return interacting.replyToInteraction(interaction, t("getroom.noRoom", { slot: closest.label }));
     }

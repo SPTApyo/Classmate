@@ -10,12 +10,14 @@ RUN HUSKY=0 npm ci --no-audit --no-fund
 COPY . .
 RUN npm run build
 
+# Debug symbols are about 15 MB of the binary.
 FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS node
+RUN apk add --no-cache binutils && strip /usr/local/bin/node
 
 FROM alpine:${ALPINE_VERSION}
 
 ENV NODE_ENV=production
-ENV TZ=Europe/Paris
+ENV TZ=UTC
 
 RUN apk add --no-cache libstdc++ tzdata tini \
   && addgroup -g 1000 node \
@@ -23,17 +25,18 @@ RUN apk add --no-cache libstdc++ tzdata tini \
 
 COPY --from=node /usr/local/bin/node /usr/local/bin/node
 
-WORKDIR /home/node/IUT_Assistant
+WORKDIR /app
+
+# Ownership set before the copy: no duplicated layer.
+RUN mkdir -p log data/config data/assignments data/keys data/user_data \
+  && chown -R node:node /app \
+  && chmod -R 700 /app
 
 COPY --from=build --chown=node:node /src/dist ./
 
-RUN mkdir -p log data/config data/devoirs data/keys data/user_data \
-  && chown -R node:node /home/node/IUT_Assistant \
-  && chmod -R 700 /home/node/IUT_Assistant
-
 USER node
 
-VOLUME ["/home/node/IUT_Assistant/log", "/home/node/IUT_Assistant/data/config", "/home/node/IUT_Assistant/data/devoirs", "/home/node/IUT_Assistant/data/keys", "/home/node/IUT_Assistant/data/user_data"]
+VOLUME ["/app/data", "/app/log"]
 
 ENTRYPOINT ["/sbin/tini", "--"]
 

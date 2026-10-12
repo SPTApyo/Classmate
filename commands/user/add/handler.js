@@ -1,24 +1,24 @@
 const moment = require("moment");
-const DevoirManager = require("../../../utilities/DevoirManager");
+const AssignmentManager = require("../../../utilities/AssignmentManager");
 
-async function handler(interaction, { t, interacting, logger, devoirManager, user, settings }) {
+async function handler(interaction, { t, interacting, logger, assignmentManager, user, settings }) {
   const rawGroup = interaction.options.getString("group");
-  const group = devoirManager.resolveGroup(rawGroup);
+  const group = assignmentManager.resolveGroup(rawGroup);
   if (!group) {
-    const groups = devoirManager.getAllGroups().join(", ");
+    const groups = assignmentManager.getAllGroups().join(", ");
     return interacting.replyToInteraction(interaction, t("common.unknownGroup", { group: rawGroup, groups }));
   }
 
   const title = interaction.options.getString("title").trim().toUpperCase();
   const subject = interaction.options.getString("subject").trim().toUpperCase();
   const date = interaction.options.getString("due_date").trim();
-  if (!moment(date, DevoirManager.DATE_FORMAT, true).isValid()) {
+  if (!moment(date, AssignmentManager.DATE_FORMAT, true).isValid()) {
     return interacting.replyToInteraction(interaction, t("common.invalidDate"));
   }
 
-  const { created } = devoirManager.addDevoir({ group, devoir: title, matiere: subject, date, addedBy: user.username });
-  devoirManager.removeExpiredDevoirs();
-  devoirManager.sortDevoirs();
+  const { created } = assignmentManager.addAssignment({ group, title, subject, date, addedBy: user.username });
+  assignmentManager.removeExpired();
+  assignmentManager.sortAssignments();
 
   const embed = interacting.createEmbed(
     t(created ? "add.created" : "add.updated", { group }),

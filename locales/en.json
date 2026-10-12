@@ -11,13 +11,13 @@
     "permissionDenied": "You don't have permission to use this command.",
     "noGroups": "No group available.",
     "unknownGroup": "Unknown group: **{group}**. Available groups: {groups}",
-    "invalidDate": "Invalid date. Use the DD-MM-YYYY format.",
+    "invalidDate": "Invalid date. Use the YYYY-MM-DD format.",
     "rateLimited": "⏱️ Too many requests. Try again in {seconds} seconds.",
     "channelNotFound": "Channel not found.",
     "confirm": "Confirm",
     "cancel": "Cancel"
   },
-  "devoir": {
+  "assignment": {
     "details": "**ID:** {id}\n**Assignment:** {title}\n**Subject:** {subject}\n**Due date:** {date}"
   },
   "prompts": {
@@ -26,12 +26,12 @@
       "description": "Pick a group from the menu below.",
       "placeholder": "Select a group"
     },
-    "selectDevoir": {
+    "selectAssignment": {
       "description": "Group **{group}**: select an assignment.",
       "placeholder": "Select an assignment",
       "truncated": "⚠️ Only the first {max} assignments (out of {total}) are shown."
     },
-    "noDevoir": {
+    "noAssignment": {
       "title": "No assignment found",
       "description": "No assignment was found for group **{group}**."
     }
@@ -69,11 +69,11 @@
       "title": "Edit assignment ({group})",
       "assignment": "Assignment",
       "subject": "Subject",
-      "dueDate": "Due date (DD-MM-YYYY)"
+      "dueDate": "Due date (YYYY-MM-DD)"
     },
     "invalidDate": {
       "title": "Invalid date",
-      "description": "**{date}** is not in DD-MM-YYYY format. Nothing was saved."
+      "description": "**{date}** is not in YYYY-MM-DD format. Nothing was saved."
     },
     "gone": "This assignment no longer exists.",
     "success": "Assignment updated ({group})"
@@ -92,8 +92,7 @@
     "error": "Failed to fetch free rooms.",
     "floor": {
       "ground": "Ground floor",
-      "first": "1st floor",
-      "second": "2nd floor",
+      "numbered": "Floor {floor}",
       "other": "Other"
     }
   },
@@ -128,14 +127,14 @@
       "timeoutText": "You did not select a department in time.",
       "errorText": "Failed to update your department."
     },
-    "train_prog": {
-      "selectTitle": "Select your training year",
-      "selectPrompt": "Pick your training year from the list below.",
-      "placeholder": "Choose a year...",
-      "successTitle": "Training year updated",
-      "successText": "Your training year is now **{value}**.",
-      "timeoutText": "You did not select a training year in time.",
-      "errorText": "Failed to update your training year."
+    "level": {
+      "selectTitle": "Select your level",
+      "selectPrompt": "Pick your level (year of study) from the list below.",
+      "placeholder": "Choose a level...",
+      "successTitle": "Level updated",
+      "successText": "Your level is now **{value}**.",
+      "timeoutText": "You did not select a level in time.",
+      "errorText": "Failed to update your level."
     },
     "group": {
       "selectTitle": "Select your group",
@@ -204,9 +203,9 @@
     "error": "Failed to sort assignments."
   },
   "reminders": {
-    "devoirs": "Assignment reminder ({group})",
-    "qcm": "Quiz reminder ({group})",
-    "sae": "S.A.E reminder ({group})",
+    "assignments": "Assignment reminder ({group})",
+    "quizzes": "Quiz reminder ({group})",
+    "projects": "Project reminder ({group})",
     "item": "**Assignment:** {title}\n**Subject:** {subject}\n**Due date:** {date}\n**Time left: {remaining}.**",
     "today": "today",
     "dayOne": "1 day",
@@ -256,7 +255,7 @@
       "general": "General",
       "groups": "Groups and calendars",
       "channels": "Channels",
-      "sae": "S.A.E subjects",
+      "projects": "Project subjects",
       "adminRoles": "Extra admin roles",
       "appearance": "Colors and icon",
       "llm": "AI models",
@@ -264,11 +263,12 @@
       "notifications": "Notifications"
     },
     "summary": {
+      "name": "Name:",
       "language": "Language:",
       "location": "Location:",
       "department": "Department:",
       "groups": "Groups:",
-      "sae": "S.A.E:",
+      "projects": "Projects:",
       "adminRoles": "Extra admin roles:",
       "models": "AI models:",
       "none": "none",
@@ -282,12 +282,13 @@
       "announcements": "Announcements (alerts, changes, brief)"
     },
     "general": {
+      "name": "Assistant name (Atlas if empty)",
       "locale": "Default language (en or fr)",
       "location": "Location (for the assistant)",
       "department": "Department for /getroom",
       "community": "Community (for the assistant)"
     },
-    "sae": {
+    "projects": {
       "field": "One subject per line"
     },
     "llm": {
@@ -295,9 +296,9 @@
     },
     "appearance": {
       "global": "Main color",
-      "devoirs": "Assignments color",
-      "qcm": "Quiz color",
-      "sae": "S.A.E color",
+      "assignments": "Assignments color",
+      "quizzes": "Quiz color",
+      "projects": "Projects color",
       "icon": "Footer icon URL (empty = bot avatar)"
     },
     "groups": {
@@ -312,11 +313,11 @@
       "newTitle": "New group",
       "editTitle": "Calendar of {group}",
       "nameField": "Group name (letters, digits, - or _)",
-      "urlField": "Moodle calendar URL (ICS)",
+      "urlField": "Calendar URL (ICS, e.g. Moodle)",
       "deleted": "Group {group} removed. Its assignments file is kept.",
       "role": "Role pinged for this group",
-      "extra": "**Pinged role:** {role}\n**Timetable (training year):** {trainProg}",
-      "trainProgField": "Training year for the timetable (e.g. BUT2)"
+      "extra": "**Pinged role:** {role}\n**Timetable level:** {level}",
+      "levelField": "Level for the timetable (e.g. BUT2)"
     },
     "invalidNumber": "{name} must be a number between {min} and {max}.",
     "ambient": {

@@ -1,0 +1,30 @@
+{
+  "name": "{{commandName}}",
+  "description": "Updates a user's profile (alias, group, department, training year). Standard users can only update their own profile. The username is fetched automatically.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "userId": {
+        "type": "string",
+        "description": "Discord ID of the user."
+      },
+      "alias": {
+        "type": "string",
+        "description": "New alias (optional)."
+      },
+      "group": {
+        "type": "string",
+        "description": "New group (optional)."
+      },
+      "dept": {
+        "type": "string",
+        "description": "Department (optional)."
+      },
+      "level": {
+        "type": "string",
+        "description": "Level (year of study), e.g. BUT2 (optional)."
+      }
+    },
+    "required": ["userId"]
+  }
+}

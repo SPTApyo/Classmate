@@ -14,6 +14,7 @@ const {
 } = require("discord.js");
 const { LOCALES } = require("../../../utilities/i18n");
 const Notifier = require("../../../utilities/Notifier");
+const { botName } = require("../../../utilities/identity");
 
 const PANEL_TIMEOUT_MS = 10 * 60 * 1000;
 const COLOR_REGEX = /^(0x|#)?([0-9a-fA-F]{6})$/;
@@ -26,7 +27,7 @@ const SECTIONS = {
   general: "settings.sections.general",
   groups: "settings.sections.groups",
   channels: "settings.sections.channels",
-  sae: "settings.sections.sae",
+  projects: "settings.sections.projects",
   adminRoles: "settings.sections.adminRoles",
   appearance: "settings.sections.appearance",
   llm: "settings.sections.llm",
@@ -41,9 +42,9 @@ const CHANNEL_LABELS = {
 };
 const COLOR_LABELS = {
   embedGlobalColor: "settings.appearance.global",
-  embedDevoirsColor: "settings.appearance.devoirs",
-  embedQCMColor: "settings.appearance.qcm",
-  embedSAEColor: "settings.appearance.sae",
+  embedAssignmentsColor: "settings.appearance.assignments",
+  embedQuizzesColor: "settings.appearance.quizzes",
+  embedProjectsColor: "settings.appearance.projects",
 };
 
 const AMBIENT_FIELDS = {
@@ -134,9 +135,9 @@ async function handler(interaction, deps) {
     const description = [
       t("settings.hint"),
       "",
-      `**${t("settings.summary.language")}** ${s.defaultLocale} · **${t("settings.summary.location")}** ${s.location || none} · **${t("settings.summary.department")}** ${s.planning?.defaultDept || none}`,
+      `**${t("settings.summary.name")}** ${botName()} · **${t("settings.summary.language")}** ${s.defaultLocale} · **${t("settings.summary.location")}** ${s.location || none} · **${t("settings.summary.department")}** ${s.planning?.defaultDept || none}`,
       `**${t("settings.summary.groups")}** ${groups}`,
-      `**${t("settings.summary.sae")}** ${(s.saeNames || []).join(", ") || none}`,
+      `**${t("settings.summary.projects")}** ${(s.projectSubjects || []).join(", ") || none}`,
       `**${t("settings.summary.adminRoles")}** ${roles || none}`,
       `**${t("settings.summary.models")}** ${s.llm.models.join(", ")}`,
       `**${t("settings.summary.ambient")}** ${t(s.ambient?.enabled ? "settings.ambient.on" : "settings.ambient.off")} (${s.ambient?.channels?.length || 0})`,
@@ -227,7 +228,7 @@ async function handler(interaction, deps) {
         t("settings.groups.details", { host: hostOf(task.icsUrl), channel: mention(task.reminderChannelId) }),
         t("settings.groups.extra", {
           role: SNOWFLAKE_REGEX.test(task.roleId || "") ? `<@&${task.roleId}>` : none,
-          trainProg: task.trainProg || none,
+          level: task.level || none,
         }),
       ].join("\n"),
       rows: [
@@ -357,14 +358,15 @@ async function handler(interaction, deps) {
     const modal = new ModalBuilder().setCustomId(id(`modal:${section}`)).setTitle(t(SECTIONS[section]));
     if (section === "general") {
       modal.addComponents(
+        textRow("name", t("settings.general.name"), s.assistantName, { required: false, maxLength: 32 }),
         textRow("locale", t("settings.general.locale"), s.defaultLocale, { maxLength: 5 }),
         textRow("location", t("settings.general.location"), s.location, { required: false, maxLength: 100 }),
         textRow("community", t("settings.general.community"), s.community, { required: false, maxLength: 200 }),
         textRow("dept", t("settings.general.department"), s.planning?.defaultDept, { maxLength: 20 }),
       );
-    } else if (section === "sae") {
+    } else if (section === "projects") {
       modal.addComponents(
-        textRow("names", t("settings.sae.field"), (s.saeNames || []).join("\n"), {
+        textRow("names", t("settings.projects.field"), (s.projectSubjects || []).join("\n"), {
           style: TextInputStyle.Paragraph,
           required: false,
         }),
@@ -392,7 +394,7 @@ async function handler(interaction, deps) {
     if (!group) modal.addComponents(textRow("group", t("settings.groups.nameField"), "", { maxLength: 32 }));
     modal.addComponents(
       textRow("icsUrl", t("settings.groups.urlField"), task?.icsUrl, { style: TextInputStyle.Paragraph }),
-      textRow("trainProg", t("settings.groups.trainProgField"), task?.trainProg, { required: false, maxLength: 20 }),
+      textRow("level", t("settings.groups.levelField"), task?.level, { required: false, maxLength: 20 }),
     );
     return modal;
   }
@@ -406,11 +408,12 @@ async function handler(interaction, deps) {
           throw new Error(t("settings.invalidLocale", { value: locale, locales: Object.keys(LOCALES).join(", ") }));
         }
         s.defaultLocale = locale;
+        s.assistantName = value("name");
         s.location = value("location");
         s.community = value("community");
         s.planning = { ...s.planning, defaultDept: value("dept").toUpperCase() };
-      } else if (section === "sae") {
-        s.saeNames = splitLines(value("names"));
+      } else if (section === "projects") {
+        s.projectSubjects = splitLines(value("names"));
       } else if (section === "llm") {
         s.llm = { ...s.llm, models: splitLines(value("models")) };
       } else if (section === "appearance") {
@@ -550,13 +553,13 @@ async function handler(interaction, deps) {
     if (action === "modal:task-new") {
       const newGroup = i.fields.getTextInputValue("group").trim().toUpperCase();
       const icsUrl = i.fields.getTextInputValue("icsUrl").trim();
-      const trainProg = i.fields.getTextInputValue("trainProg").trim().toUpperCase();
+      const level = i.fields.getTextInputValue("level").trim().toUpperCase();
       settings.update((s) => {
         s.tasks.push({
           group: newGroup,
           icsUrl,
           reminderChannelId: interaction.channelId,
-          ...(trainProg ? { trainProg } : {}),
+          ...(level ? { level } : {}),
         });
       });
       return { view: () => taskView(newGroup), saved: true };
@@ -564,12 +567,12 @@ async function handler(interaction, deps) {
     if (kind === "modal" && group.startsWith("task-edit:")) {
       const taskGroup = group.slice("task-edit:".length);
       const icsUrl = i.fields.getTextInputValue("icsUrl").trim();
-      const trainProg = i.fields.getTextInputValue("trainProg").trim().toUpperCase();
+      const level = i.fields.getTextInputValue("level").trim().toUpperCase();
       settings.update((s) => {
         const task = s.tasks.find((item) => item.group === taskGroup);
         task.icsUrl = icsUrl;
-        if (trainProg) task.trainProg = trainProg;
-        else delete task.trainProg;
+        if (level) task.level = level;
+        else delete task.level;
       });
       return { view: () => taskView(taskGroup), saved: true };
     }

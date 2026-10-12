@@ -13,8 +13,17 @@ function withTimeout(promise, ms) {
 }
 
 async function handler(interaction, deps) {
-  const { t, llm, interacting, logger, permissions, checkRateLimit, downloadAttachment, smartChunk, SAFE_MENTIONS } =
-    deps;
+  const {
+    t,
+    assistant,
+    interacting,
+    logger,
+    permissions,
+    checkRateLimit,
+    downloadAttachment,
+    smartChunk,
+    SAFE_MENTIONS,
+  } = deps;
   const isAdmin = permissions.isAdmin(interaction);
   const rateLimit = checkRateLimit(interaction.user.id, isAdmin);
   if (!rateLimit.allowed) {
@@ -29,7 +38,7 @@ async function handler(interaction, deps) {
     const attachment = interaction.options.getAttachment("file");
     const fileObj = attachment ? await downloadAttachment(attachment) : null;
 
-    const response = await withTimeout(llm.generateContent(text, interaction, "", fileObj), LLM_TIMEOUT_MS);
+    const response = await withTimeout(assistant.generateContent(text, interaction, "", fileObj), LLM_TIMEOUT_MS);
     const [first, ...rest] = smartChunk(response?.trim() ? response : t("chat.noAnswer"));
 
     await interaction.editReply({ content: first, allowedMentions: SAFE_MENTIONS });

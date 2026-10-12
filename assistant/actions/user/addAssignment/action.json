@@ -1,0 +1,27 @@
+{
+  "name": "{{commandName}}",
+  "description": "Adds an assignment to a group.",
+  "parameters": {
+    "type": "object",
+    "properties": {
+      "group": {
+        "type": "string",
+        "description": "Group name."
+      },
+      "title": {
+        "type": "string",
+        "description": "Assignment title."
+      },
+      "subject": {
+        "type": "string",
+        "description": "Subject."
+      },
+      "date": {
+        "type": "string",
+        "description": "Due date in YYYY-MM-DD format.",
+        "pattern": "^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$"
+      }
+    },
+    "required": ["group", "title", "subject", "date"]
+  }
+}

@@ -1,5 +1,5 @@
 const app = require("../package.json");
-const { config, settings } = require("./config");
+const { settings } = require("./config");
 
 let client = null;
 
@@ -7,10 +7,10 @@ function setClient(discordClient) {
   client = discordClient;
 }
 
-// Server nickname set by the deployer wins.
+const DEFAULT_NAME = "Atlas";
+
 function botName() {
-  const guild = client?.guilds?.cache?.get(config.guildId);
-  return guild?.members?.me?.displayName || client?.user?.displayName || client?.user?.username || app.name;
+  return settings.get().assistantName?.trim() || DEFAULT_NAME;
 }
 
 function embedFooter() {
