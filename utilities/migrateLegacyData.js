@@ -25,8 +25,24 @@ function renameKey(object, from, to) {
   return true;
 }
 
+const MOVED_MARKER = "MOVED_TO_ASSIGNMENTS";
+
+function moveLegacyFolder() {
+  if (!fs.existsSync(OLD_DIR) || fs.existsSync(path.join(OLD_DIR, MOVED_MARKER))) return;
+  if (!fs.existsSync(NEW_DIR)) {
+    try {
+      fs.renameSync(OLD_DIR, NEW_DIR);
+      return;
+    } catch {
+      // A mounted volume cannot be renamed.
+    }
+  }
+  fs.cpSync(OLD_DIR, NEW_DIR, { recursive: true, force: false });
+  fs.writeFileSync(path.join(OLD_DIR, MOVED_MARKER), "Copied to ../assignments, safe to delete.\n");
+}
+
 function migrateAssignmentFiles() {
-  if (fs.existsSync(OLD_DIR) && !fs.existsSync(NEW_DIR)) fs.renameSync(OLD_DIR, NEW_DIR);
+  moveLegacyFolder();
   if (!fs.existsSync(NEW_DIR)) return 0;
   let count = 0;
   for (const file of fs.readdirSync(NEW_DIR)) {
