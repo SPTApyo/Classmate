@@ -7,6 +7,30 @@ const axios = require("axios");
 
 const { fromRoot } = require("./utilities/paths");
 const moduleRegistry = require("./utilities/moduleRegistry");
+const app = require("./package.json");
+
+const STARTUP_ERROR_PATH = fromRoot("data", "startup-error.txt");
+// 1.7 images kept their data there.
+const LEGACY_ROOT = "/home/node/IUT_Assistant";
+
+// NAS UIs may hide stderr: stdout plus file.
+function failStartup(message) {
+  const line = `[ ERROR ] ${message}`;
+  console.log(line);
+  try {
+    fs.writeFileSync(STARTUP_ERROR_PATH, `${new Date().toISOString()} ${line}\n`);
+    // No secret: readable from the NAS.
+    fs.chmodSync(STARTUP_ERROR_PATH, 0o644);
+  } catch {
+    console.log(`[ ERROR ] ${fromRoot("data")} is not writable by uid ${process.getuid?.()}`);
+  }
+  process.exit(1);
+}
+
+console.log(`[ NOTICE ] ${app.name} ${app.version} starting (uid ${process.getuid?.()}, data in ${fromRoot("data")})`);
+if (fs.existsSync(LEGACY_ROOT)) {
+  failStartup(`A volume is mounted on ${LEGACY_ROOT}, the 1.7 path. Mount your data folder on /app/data instead.`);
+}
 
 // Bad data must fail with one readable line.
 function loadConfiguration() {
@@ -15,8 +39,7 @@ function loadConfiguration() {
     const fromEnv = require("./utilities/envOverrides").applyEnvOverrides();
     return { migrated, fromEnv, ...require("./utilities/config") };
   } catch (error) {
-    console.error(`[ ERROR ] ${error.message}`);
-    process.exit(1);
+    failStartup(error.message);
   }
 }
 
@@ -24,7 +47,6 @@ require("dotenv").config({ path: fromRoot("data", "keys", ".env"), quiet: true }
 const { migrated, fromEnv, config, settings } = loadConfiguration();
 const permissions = require("./utilities/permissions");
 const identity = require("./utilities/identity");
-const app = require("./package.json");
 const AssignmentManager = require("./utilities/AssignmentManager");
 const Logger = require("./utilities/Logger");
 const Interacting = require("./utilities/interacting");
@@ -335,6 +357,7 @@ function runDailyMaintenance() {
 
 client.once(Events.ClientReady, async () => {
   logger.logMessage(`[ SUCCESS ] Logged in as ${client.user.tag}`);
+  fs.rmSync(STARTUP_ERROR_PATH, { force: true });
   if (migrated.length > 0) logger.logMessage(`[ NOTICE ] Migrated 1.7 data: ${migrated.join(", ")}`);
   if (fromEnv.length > 0) logger.logMessage(`[ NOTICE ] Set from the environment: ${fromEnv.join(", ")}`);
   const owners = await permissions.loadOwners(client).catch((error) => {
@@ -372,8 +395,7 @@ client.once(Events.ClientReady, async () => {
 
 async function initializeBot() {
   if (!process.env.DISCORD_TOKEN) {
-    logger.logMessage("[ ERROR ] DISCORD_TOKEN is not set");
-    process.exit(1);
+    failStartup("DISCORD_TOKEN is not set: add it to the environment or to data/keys/.env");
   }
 
   for (const dir of [config.directories.logDirectory, config.directories.dataDirectory]) {
@@ -405,7 +427,6 @@ process.on("unhandledRejection", (reason) => {
     await client.login(process.env.DISCORD_TOKEN);
   } catch (error) {
     // Non-zero exit lets Docker restart the container.
-    logger.logMessage("[ ERROR ] Failed to log in to Discord", error);
-    process.exit(1);
+    failStartup(`Failed to log in to Discord: ${error.message}`);
   }
 })();

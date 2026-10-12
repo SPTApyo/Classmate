@@ -11,7 +11,11 @@ const GROUP_NAME_REGEX = /^[A-Za-z0-9_-]{1,32}$/;
 function readConfigFile(filePath) {
   if (!fs.existsSync(filePath)) {
     const example = filePath.replace(/\.json$/, ".example.json");
-    throw new Error(`Missing ${filePath}. Copy ${example} (or defaults/ in Docker) and fill it in.`);
+    throw new Error(
+      `No configuration: ${filePath} is missing. Set the container environment (DISCORD_TOKEN, GEMINI_API_KEY, ` +
+        `CONFIG__guildId, SETTINGS__tasks__0__icsUrl, SETTINGS__tasks__0__reminderChannelId), or copy ${example} ` +
+        "(defaults/ in the image) and fill it in. See docs/configuration.md.",
+    );
   }
   return readJson(filePath);
 }

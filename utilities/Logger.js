@@ -35,10 +35,7 @@ class Logger {
         sendErrorToLogChannel(this.client, message, error);
       }
 
-      const output = colorize(line);
-      if (line.includes("[ ERROR ]")) console.error(output);
-      else if (line.includes("[ NOTICE ]")) console.warn(output);
-      else console.log(output);
+      console.log(colorize(line));
 
       // Sync write keeps log order across async handlers.
       fs.appendFileSync(this.logFileName, `${line}\n`);
