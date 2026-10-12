@@ -86,6 +86,31 @@ If it ran as a single container, follow the next section.
 
 ## Without Compose
 
+Your configuration (server, groups, calendars, channels) and your data live in the volumes of the old container, not
+in its environment. Copying the environment of the 1.7 container (DISCORD_TOKEN, GEMINI_API_KEY) into a new
+container with new, empty volumes is not enough: the bot finds no config.json and stops a few seconds after starting.
+Reuse the old volumes instead.
+
+### The old container used Docker volumes
+
+When the old container had no folders of the NAS mounted, its data sits in Docker volumes, one per folder. Look at
+the volumes of the old container in the Docker app before removing it, then mount the same volumes in the new
+container:
+
+| Volume of the 1.7 container             | Mount it on in the new container |
+| --------------------------------------- | -------------------------------- |
+| /home/node/IUT_Assistant/data/config    | /app/data/config                 |
+| /home/node/IUT_Assistant/data/devoirs   | /app/data/assignments            |
+| /home/node/IUT_Assistant/data/keys      | /app/data/keys                   |
+| /home/node/IUT_Assistant/data/user_data | /app/data/user_data              |
+| /home/node/IUT_Assistant/log            | /app/log                         |
+
+Stop the old container, but do not remove its volumes until the new one works. The bot converts the files in place
+on its first start. Mounting the devoirs volume on /app/data/devoirs also works: the bot then copies it into
+assignments and leaves a MOVED_TO_ASSIGNMENTS file in the old one.
+
+### The old container used folders of the NAS
+
 On a NAS interface or with docker run:
 
 1. Stop and remove the old container. Its data stays in the folders on the NAS.
@@ -116,6 +141,12 @@ directly.
 
 ## If something goes wrong
 
+When the bot stops during startup, it writes the reason in startup-error.txt at the root of the data folder, readable
+from the NAS file manager, and prints it in the container logs. The first log line always shows the version, the uid
+and the data path. If no startup-error.txt appears in your data folder, the folder is not mounted on /app/data.
+
+- **Stops a few seconds after starting, even with the token**: the new container has empty volumes. Mount the
+  volumes of the 1.7 container, see Without Compose above.
 - **Missing /app/data/config/config.json**: the volumes still point to /home/node/IUT_Assistant. Fix the paths.
 - **EACCES or permission denied on /app/data**: the container cannot write in the NAS folder. Run it as the NAS user,
   see [deployment.md](deployment.md#on-a-nas).
