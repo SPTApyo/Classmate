@@ -45,7 +45,7 @@
   "license": "GPL-3.0-or-later",
   "description": "Discord bot for a class: calendar deadline reminders, timetable watch and an AI assistant",
   "dependencies": {
-    "@google/genai": "^1.52.0",
+    "@google/genai": "^2.28.0",
     "axios": "^1.11.0",
     "discord.js": "^14.16.3",
     "dotenv": "^16.4.7",
