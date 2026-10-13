@@ -8,7 +8,7 @@ services:
     environment:
       # Reminders and the evening brief follow this time zone.
       TZ: ${TZ:-UTC}
-      # Any setting can be set here, see docs/configuration.md:
+      # Any setting can be set here, see docs/environment.md:
       # DISCORD_TOKEN: ...
       # GEMINI_API_KEY: ...
       # CONFIG__guildId: "123456789012345678"

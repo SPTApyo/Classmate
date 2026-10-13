@@ -52,7 +52,7 @@ git clone https://github.com/SPTApyo/classmate.git
 cd classmate
 cp data/config/config.example.json data/config/config.json
 cp data/config/settings.example.json data/config/settings.json
-mkdir -p data/keys
+mkdir -p data/keys data/assignments data/user_data log
 printf 'DISCORD_TOKEN=...\nGEMINI_API_KEY=...\n' > data/keys/.env
 docker compose pull
 docker compose up -d
@@ -60,7 +60,7 @@ docker compose up -d
 
 Fill config.json and settings.json first, see [docs/configuration.md](docs/configuration.md). Or skip the files
 entirely and set everything in the environment section of docker-compose.yml, see
-[From docker-compose](docs/configuration.md#from-docker-compose). Set TAG to pin a version, for example TAG=1.8.2
+[docs/environment.md](docs/environment.md). Set TAG to pin a version, for example TAG=1.8.4
 docker compose up -d.
 
 From source, with Node.js 22 or later:

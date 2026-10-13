@@ -29,7 +29,7 @@ PROCESS_TEST_MODE=1: every reminder and alert goes to the test channel and nobod
 
 ## Workflow
 
-1. main is protected. Every change goes through a pull request.
+1. Every change goes through a pull request against main.
 2. Branch from main and name the branch after its intent: feat/..., fix/..., refactor/..., docs/..., ci/...,
    chore/...
 3. One pull request, one topic. If its description needs the word "and", it is probably two pull requests. As a
@@ -85,7 +85,8 @@ by the model only: keep them in English, without i18n.
 
 ## Adding a slash command
 
-1. Create commands/LEVEL/NAME/command.json, where LEVEL is admin or user and the folder name is the command name.
+1. Create commands/LEVEL/NAME/command.json, where LEVEL is owner, admin or user and the folder name is the
+   command name.
 2. Create handler.js exporting async (interaction, deps) => {}.
 3. Admin commands go in commands/admin: the permission check is automatic.
 

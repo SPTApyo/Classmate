@@ -147,7 +147,9 @@ and the data path. If no startup-error.txt appears in your data folder, the fold
 
 - **Stops a few seconds after starting, even with the token**: the new container has empty volumes. Mount the
   volumes of the 1.7 container, see Without Compose above.
-- **Missing /app/data/config/config.json**: the volumes still point to /home/node/IUT_Assistant. Fix the paths.
+- **No configuration: /app/data/config/config.json is missing**: the volumes are empty or still point to
+  /home/node/IUT_Assistant. Mount the 1.7 volumes on the new paths.
+- **A volume is mounted on /home/node/IUT_Assistant**: a volume kept its 1.7 path. Mount it on /app instead.
 - **EACCES or permission denied on /app/data**: the container cannot write in the NAS folder. Run it as the NAS user,
   see [deployment.md](deployment.md#on-a-nas).
 - **The assignment list is empty**: data/devoirs was not renamed, or its volume points to the old path. Rename it and

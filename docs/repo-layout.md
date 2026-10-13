@@ -34,6 +34,9 @@ Where everything lives, and which file to open first for a given change.
 | Attached files                                    | utilities/fileIngest.js, converter/server.py                        |
 | Settings panel, forms                             | commands/admin/settings/, utilities/EmbedFormManager.js             |
 | Loading and validating settings                   | utilities/config.js                                                 |
+| Settings from environment variables               | utilities/envOverrides.js                                           |
+| Converting 1.7 data on startup                    | utilities/migrateLegacyData.js                                      |
+| Safe JSON reads and writes                        | utilities/jsonFile.js                                               |
 | Direct messages                                   | utilities/dm.js                                                     |
 | Failure alerts to owners                          | utilities/health.js                                                 |
 | Logs                                              | utilities/Logger.js                                                 |

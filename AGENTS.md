@@ -10,7 +10,7 @@ build: it fails when a handler cannot be bundled.
 
 - New Discord text: add the key to both locales, npm run i18n:check catches a missing one.
 - Docker changes: docker build . and docker build converter, then start the bot image once. Without config.json it
-  must stop on a single readable error line.
+  must stop on a readable error line, on stdout and in data/startup-error.txt.
 - There is no test suite. Say what you ran and what you could not check.
 
 Formatting belongs to Prettier: run npm run format, do not hand-format. Never add eslint-disable comments.

@@ -82,32 +82,9 @@ on every group: the timetable watch and the evening brief then stay off, and the
 
 ## From docker-compose
 
-Every key of config.json, settings.json and persona.json can be set from environment variables, so a deployment can
-live in docker-compose.yml alone. The two secrets are plain variables: DISCORD_TOKEN and GEMINI_API_KEY.
-
-```yaml
-environment:
-  DISCORD_TOKEN: ...
-  GEMINI_API_KEY: ...
-  CONFIG__guildId: "123456789012345678"
-  SETTINGS__assistantName: Atlas
-  SETTINGS__tasks__0__group: 1A
-  SETTINGS__tasks__0__icsUrl: https://moodle.example.edu/calendar/export_execute.php?...
-  SETTINGS__tasks__0__reminderChannelId: "123456789012345678"
-  SETTINGS__projectSubjects: '["Project A","Project B"]'
-  SETTINGS__notifications__eveningBriefHour: "20"
-  PERSONA__thinkingLevel: low
-```
-
-- The prefix picks the file: CONFIG, SETTINGS or PERSONA.
-- Double underscores go one level down. A number is an array index: tasks__0__group is the group of the first task.
-- A value that is valid JSON is read as JSON: numbers, true, false, null, arrays, objects. Anything else stays a
-  string. A key that already holds text in the file or the template stays text, so IDs and group names never
-  turn into numbers.
-- On each start, the variables are written into the files, created from the templates when missing. Edits made with
-  /settings still apply right away, but a restart puts back the values of the environment. Keys not set in the
-  environment keep their value from the file.
-- The log lists the keys taken from the environment, never their values.
+Every key of config.json, settings.json and persona.json can also be set from environment variables, so a deployment
+can live in docker-compose.yml or in the environment table of a NAS interface. [environment.md](environment.md) lists
+every variable, its default and which ones a new instance needs.
 
 ## Editing settings from Discord
 

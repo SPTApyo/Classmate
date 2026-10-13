@@ -42,9 +42,10 @@ The bot needs its configuration before it starts. Two ways, which can be mixed:
 - **Files**: config.json and settings.json in data/config/, secrets in data/keys/.env. See
   [configuration.md](configuration.md).
 - **Environment**: every key in the environment section of docker-compose.yml, no file needed. See
-  [configuration.md](configuration.md#from-docker-compose). The environment wins at each start.
+  [environment.md](environment.md). The environment wins at each start.
 
-Without either, the bot stops on a single line naming the missing file.
+Without either, the bot stops and says which file is missing, in the container logs and in startup-error.txt at
+the root of /app/data, which a NAS file manager can open. The file is removed once the bot starts.
 
 ### Time zone
 
@@ -60,7 +61,7 @@ TZ=Europe/Paris
 TAG pins both images to a release, latest otherwise:
 
 ```bash
-TAG=1.8.2 docker compose up -d
+TAG=1.8.4 docker compose up -d
 ```
 
 To build the images from your checkout instead of pulling them:
@@ -89,8 +90,9 @@ image. persona.json is created from its template on the first start:
 docker run --rm --entrypoint cat apyo37/classmate defaults/config.example.json > data/config/config.json
 ```
 
-The mounted folders must be writable by the uid the container runs as, 1000 by default. On a NAS, run it as the NAS
-user instead, see Permissions below. Writes go through a temporary file and a
+The mounted folders must be writable by the uid the container runs as, 1000 by default. Create them before the first
+start: a folder Docker creates for a missing bind mount belongs to root, and the bot cannot write in it. On a NAS, run
+the container as the NAS user instead, see Permissions below. Writes go through a temporary file and a
 rename, so a crash never leaves a half-written file. A profile or directive file that cannot be read is moved aside
 as name.corrupt-DATE and logged, never overwritten.
 
@@ -111,9 +113,6 @@ before a new major version. From IUT Assistant 1.7, follow [migration.md](migrat
 The Docker app of UGOS Pro accepts a docker-compose.yml: Docker > Project > Create. Use that rather than creating
 containers one by one.
 
-If the Docker app only offers images and containers, without projects, create the container by hand as in Without
-Compose below: same image, environment variables and folders.
-
 1. In the wizard, pick or create a storage folder for the project, for example docker/classmate on a volume, with
    read and write access. Relative paths of the compose file, such as ./data and ./log, point inside it.
 2. Paste the docker-compose.yml of the repository, set the variables under environment (DISCORD_TOKEN,
@@ -128,10 +127,13 @@ Compose below: same image, environment variables and folders.
 
 To update, open the project, pull the images again and redeploy it.
 
+If the Docker app only offers images and containers, without projects, create the containers by hand as in Without
+Compose below: same images, environment variables and folders.
+
 ### Without Compose
 
 Synology, QNAP, Portainer or any interface that creates containers one by one run the image the same way: the
-environment variables of [configuration.md](configuration.md#from-docker-compose) go in the environment table of the
+environment variables of [environment.md](environment.md) go in the environment table of the
 interface. Check first whether the interface accepts a docker-compose.yml (often called a project or a stack): it is
 simpler.
 
@@ -149,6 +151,9 @@ docker run -d --name classmate --restart unless-stopped \
   apyo37/classmate:latest
 ```
 
+These are only the required variables. Set the channels and the other keys too, see
+[environment.md](environment.md#minimal-example), or the bot keeps the placeholders of the templates.
+
 Two things to watch:
 
 - **Permissions.** The bot runs as uid 1000 by default, while NAS folders belong to the NAS user, often another uid
@@ -157,8 +162,8 @@ Two things to watch:
   write access to the folders in the file manager also works, but opens them to every account of the NAS.
 - **The converter is optional.** Without it, PDFs go to the model as they are and Office files are refused. To add it,
   create a Docker network, start apyo37/classmate-converter on it with the container name converter, and attach the
-  bot to the same network: the default URL http://converter:8080 then works. With another name, set
-  CONFIG__converter__url. Compose also isolates the converter (no internet, read-only filesystem, memory cap); set the
+  bot to the same network: the default URL http://converter:8080 then works. With another name or another machine,
+  set CONFIG\_\_converter\_\_url, see [environment.md](environment.md#connecting-the-bot-to-the-converter). Compose also isolates the converter (no internet, read-only filesystem, memory cap); set the
   same options in the interface when it offers them.
 
 ```bash
@@ -169,7 +174,7 @@ docker run -d --name converter --network classmate --restart unless-stopped \
 docker network connect classmate classmate
 ```
 
-Without the converter on an internal network, it can reach the internet. That only matters if a malicious document
+Unlike with Compose, the converter is not on an internal network here and can reach the internet. That only matters if a malicious document
 exploits a parser flaw.
 
 ## Releases
