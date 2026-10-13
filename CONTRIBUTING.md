@@ -29,7 +29,8 @@ PROCESS_TEST_MODE=1: every reminder and alert goes to the test channel and nobod
 
 ## Workflow
 
-1. Every change goes through a pull request against main.
+1. main is protected: every change goes through a pull request, and CI must pass. Direct pushes and force-pushes
+   are refused.
 2. Branch from main and name the branch after its intent: feat/..., fix/..., refactor/..., docs/..., ci/...,
    chore/...
 3. One pull request, one topic. If its description needs the word "and", it is probably two pull requests. As a
