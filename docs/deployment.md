@@ -185,13 +185,24 @@ A release is a tag. Pushing vX.Y.Z runs .github/workflows/release.yml:
 2. **publish**: both images built for amd64 and arm64 with Buildx and QEMU, pushed to Docker Hub.
 3. **release**: a GitHub release with notes generated from the merged pull requests.
 
-To cut a release:
+main only accepts squash-merged pull requests with green CI, so the version bump goes through one too. To cut a
+release:
 
 ```bash
+git switch -c release/vX.Y.Z
 npm version X.Y.Z --no-git-tag-version
 git commit -am "chore: release vX.Y.Z"
+git push -u origin release/vX.Y.Z
+gh pr create --fill
+gh pr merge --squash --auto
+```
+
+Once merged, tag the merge commit on main:
+
+```bash
+git switch main && git pull
 git tag vX.Y.Z
-git push origin main vX.Y.Z
+git push origin vX.Y.Z
 ```
 
 Bump the version before tagging: a tag that does not match package.json fails the verify job and publishes nothing.
