@@ -25,10 +25,14 @@ const OPENS_MARKERS = ["s'ouvre", "opens"];
 const CLOSES_MARKERS = ["se termine", "closes"];
 const DAY_NUMBERS = { m: 1, tu: 2, w: 3, th: 4, f: 5, sa: 6, su: 7 };
 const NO_MENTIONS = { parse: [] };
+const UPCOMING_FALLBACK_COUNT = 3;
+const NEW_TAG_MS = 24 * 60 * 60 * 1000;
+// Academic years start on September 1st.
+const ACADEMIC_YEAR_START_MONTH = 8;
+const SNOWFLAKE_REGEX = /^\d{17,20}$/;
 
 const DEFAULTS = {
   ownerAlerts: true,
-  newAssignments: true,
   timetableChanges: true,
   deadlineHours: [24, 3],
   eveningBriefHour: 19,
@@ -39,6 +43,11 @@ const unix = (ms) => Math.floor(ms / 1000);
 const isTimed = (assignment) => Number.isFinite(assignment.due);
 const hasMarker = (title, markers) => markers.some((marker) => title.toLowerCase().includes(marker));
 const sameGroup = (a, b) => String(a || "").toUpperCase() === String(b || "").toUpperCase();
+
+function academicYearEnd(date) {
+  const end = date.clone().month(ACADEMIC_YEAR_START_MONTH).startOf("month");
+  return date.month() >= ACADEMIC_YEAR_START_MONTH ? end.add(1, "year") : end;
+}
 
 // Moodle noise: DEADLINE, week numbers, times.
 function cleanEventTitle(summary) {
@@ -208,7 +217,9 @@ class Notifier {
     const { channels } = this.settings.get();
     let channelId = task.reminderChannelId;
     if (isTestMode()) channelId = channels.test;
-    else if (kind === "announce" && channels.announcements) channelId = channels.announcements;
+    else if (kind === "announce" && SNOWFLAKE_REGEX.test(channels.announcements || "")) {
+      channelId = channels.announcements;
+    }
     const channel = await this.client.channels.fetch(channelId).catch(() => null);
     if (!channel?.isTextBased?.()) throw new Error(`Channel ${channelId} for group ${task.group} is unavailable`);
     return channel;
@@ -269,7 +280,8 @@ class Notifier {
     return Object.values(ical.parseICS(text));
   }
 
-  async syncGroup(task) {
+  // First sync: nothing is tagged new.
+  async syncGroup(task, firstSync) {
     const events = await this.fetchCalendar(task);
     const threshold = AssignmentManager.expiryThreshold();
     const created = [];
@@ -289,6 +301,7 @@ class Notifier {
         date: end.format(AssignmentManager.DATE_FORMAT),
         due: end.valueOf(),
         addedBy: "Calendar",
+        addedAt: firstSync ? 0 : this.now(),
       });
       if (result.created) created.push(result.assignment);
     }
@@ -298,9 +311,10 @@ class Notifier {
   async syncAll() {
     for (const task of this.settings.get().tasks) {
       const key = `Calendar ${task.group}`;
+      const firstSync = !this.state.synced.includes(task.group);
       let created;
       try {
-        created = await this.syncGroup(task);
+        created = await this.syncGroup(task, firstSync);
         await this.health.ok(key);
       } catch (error) {
         await this.health.fail(key, error);
@@ -308,16 +322,14 @@ class Notifier {
       }
       this.logger.logMessage(`[ SUCCESS ] Calendar synced for group ${task.group} (${created.length} new)`);
 
-      // First sync fills the list silently.
-      if (!this.state.synced.includes(task.group)) {
+      if (firstSync) {
         this.state.synced.push(task.group);
         this.saveState();
         continue;
       }
-      const upcoming = created.filter((assignment) => AssignmentManager.dueOf(assignment) > this.now());
-      if (this.options().newAssignments && upcoming.length > 0) {
-        await this.announceNew(task, upcoming).catch((error) =>
-          this.logger.logMessage(`[ ERROR ] Failed to announce new assignments for ${task.group}`, error),
+      if (created.length > 0) {
+        await this.sendDigest(task).catch((error) =>
+          this.logger.logMessage(`[ ERROR ] Failed to send reminders for group ${task.group}`, error),
         );
       }
     }
@@ -333,14 +345,6 @@ class Notifier {
       title: assignment.title,
       subject: assignment.subject,
       when: this.when(assignment),
-    });
-  }
-
-  async announceNew(task, assignments) {
-    const t = translator();
-    await this.post(task, "announce", {
-      header: t("notifications.newAssignments", { group: task.group }),
-      lines: assignments.map((assignment) => this.itemLine(t, assignment)),
     });
   }
 
@@ -436,20 +440,33 @@ class Notifier {
 
   buildSections(t, group) {
     const today = moment(this.now()).startOf("day");
-    const sections = { assignments: "", quizzes: "", projects: "" };
-    for (const assignment of this.assignmentManager.loadAssignments(group)) {
+    const sections = { assignments: "", quizzes: "", projects: "", upcoming: false };
+    const yearEnd = academicYearEnd(today);
+    const later = [];
+    const assignments = this.assignmentManager.loadAssignments(group).sort(AssignmentManager.byDueDate);
+    for (const assignment of assignments) {
       const daysRemaining = moment(assignment.date, AssignmentManager.DATE_FORMAT).startOf("day").diff(today, "days");
       const item =
         t("reminders.item", {
-          title: assignment.title,
+          title: this.now() - (assignment.addedAt || 0) < NEW_TAG_MS ? `[NEW] ${assignment.title}` : assignment.title,
           subject: assignment.subject,
           date: isTimed(assignment) ? `<t:${unix(assignment.due)}:f>` : assignment.date,
           remaining: isTimed(assignment) ? `<t:${unix(assignment.due)}:R>` : this.formatRemaining(t, daysRemaining),
         }) + "\n\n";
       const withinMonth = daysRemaining <= 31 && daysRemaining >= -2;
-      if (hasMarker(assignment.title, CLOSES_MARKERS) && withinMonth) sections.quizzes += item;
-      else if (this.isProject(assignment) && withinMonth) sections.projects += item;
-      else if (daysRemaining <= 7 && daysRemaining >= -2) sections.assignments += item;
+      if (hasMarker(assignment.title, CLOSES_MARKERS)) {
+        if (withinMonth) sections.quizzes += item;
+      } else if (this.isProject(assignment)) {
+        if (withinMonth) sections.projects += item;
+      } else if (daysRemaining <= 7 && daysRemaining >= -2) {
+        sections.assignments += item;
+      } else if (daysRemaining > 7 && moment(assignment.date, AssignmentManager.DATE_FORMAT).isBefore(yearEnd)) {
+        later.push(item);
+      }
+    }
+    if (!sections.assignments && later.length > 0) {
+      sections.assignments = t("reminders.upcomingNote") + "\n\n" + later.slice(0, UPCOMING_FALLBACK_COUNT).join("");
+      sections.upcoming = true;
     }
     return sections;
   }
@@ -491,7 +508,8 @@ class Notifier {
       const content = sections[key];
       const description =
         content.length > EMBED_DESCRIPTION_LIMIT ? content.slice(0, EMBED_DESCRIPTION_LIMIT - 2) + "\n…" : content;
-      return this.interacting.createEmbed(t(`reminders.${key}`, { group }), description, colors[key]);
+      const title = key === "assignments" && sections.upcoming ? "upcoming" : key;
+      return this.interacting.createEmbed(t(`reminders.${title}`, { group }), description, colors[key]);
     };
 
     if (isTestMode()) {
@@ -517,7 +535,11 @@ class Notifier {
     }
     this.state.digest[group] = stored;
     this.saveState();
-    this.logger.logMessage(`[ SUCCESS ] Reminders updated for group ${group}`);
+    if (DIGEST_SECTIONS.some((key) => sections[key])) {
+      this.logger.logMessage(`[ SUCCESS ] Reminders updated for group ${group}`);
+    } else {
+      this.logger.logMessage(`[ NOTICE ] Nothing due soon for group ${group}, no reminder posted`);
+    }
   }
 
   planningTarget(task) {

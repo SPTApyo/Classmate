@@ -121,6 +121,7 @@ class AssignmentManager {
     let id = 0;
     while (usedIds.has(id)) id++;
     assignment.id = id;
+    assignment.addedAt ??= Date.now();
     assignments.push(assignment);
     this.saveAssignments(assignment.group, assignments);
     return { assignment, created: true };

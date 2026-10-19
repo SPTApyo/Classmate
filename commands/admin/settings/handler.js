@@ -57,7 +57,6 @@ const AMBIENT_FIELDS = {
 
 const NOTIFICATION_TOGGLES = {
   ownerAlerts: "settings.notifications.ownerAlerts",
-  newAssignments: "settings.notifications.newAssignments",
   timetableChanges: "settings.notifications.timetableChanges",
 };
 const NOTIFICATION_DEFAULTS = Notifier.DEFAULTS;

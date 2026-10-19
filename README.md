@@ -25,7 +25,7 @@ with the rights of the person asking.
 ## Features
 
 - **Assignment reminders**: deadlines synced from the calendars every hour, a daily summary edited in place, alerts before
-  each deadline and announcements for new assignments.
+  each deadline, new assignments tagged [NEW].
 - **Timetable watch**: cancelled, moved or added classes and room changes, plus an evening brief.
 - **Revision quizzes**: /quiz turns a course file or a topic into a multiple-choice quiz.
 - **Assistant**: Atlas by default, renamed with one setting. It answers in its channel, or joins a conversation on its own when it is clearly useful. It can manage

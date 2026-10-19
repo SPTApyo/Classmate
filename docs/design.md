@@ -8,15 +8,14 @@ quizzes and ambient mode.
 Everything runs on a one-minute scheduler inside the bot. Nothing is lost on restart: state is kept in
 data/assignments/notifier-state.json. The code lives in utilities/Notifier.js.
 
-| What              | When                                        | Where                          | Pings the group role |
-| ----------------- | ------------------------------------------- | ------------------------------ | -------------------- |
-| Calendar sync     | every hour                                  | -                              | -                    |
-| Daily summary     | every day at 6:00, edited in place          | group reminder channel         | no                   |
-| New assignments   | after a sync finds some                     | announcements channel          | no                   |
-| Deadline alerts   | deadlineHours before each deadline          | announcements channel          | yes                  |
-| Timetable changes | every hour, current and next week           | announcements channel          | yes                  |
-| Evening brief     | at eveningBriefHour, if classes tomorrow    | announcements channel          | no                   |
-| Owner alerts      | after 3 failures in a row, then on recovery | owners by DM, else log channel | -                    |
+| What              | When                                                     | Where                          | Pings the group role |
+| ----------------- | -------------------------------------------------------- | ------------------------------ | -------------------- |
+| Calendar sync     | every hour                                               | -                              | -                    |
+| Daily summary     | at 6:00 and after a sync finds new ones, edited in place | group reminder channel         | no                   |
+| Deadline alerts   | deadlineHours before each deadline                       | announcements channel          | yes                  |
+| Timetable changes | every hour, current and next week                        | announcements channel          | yes                  |
+| Evening brief     | at eveningBriefHour, if classes tomorrow                 | announcements channel          | no                   |
+| Owner alerts      | after 3 failures in a row, then on recovery              | owners by DM, else log channel | -                    |
 
 The daily summary has three embeds, each shown only when it has something:
 
@@ -24,6 +23,9 @@ The daily summary has three embeds, each shown only when it has something:
 - **quizzes**: calendar events whose title says the quiz closes ("closes", or "se termine" in French Moodle), within a
   month;
 - **projects**: assignments whose subject is in projectSubjects, within a month.
+
+When nothing is due within a week, the assignments embed shows the next three assignments instead (never quizzes or projects), up to the end of the academic
+year (September 1st). Assignments added in the last 24 hours start with [NEW]; the first sync of a group tags nothing.
 
 Without an announcements channel, announcements go to each group's reminder channel. The timetable watch and the
 evening brief only run for groups with a level.
@@ -33,7 +35,6 @@ notifications in settings.json (also in /settings > Notifications):
 | Key              | Default | Meaning                                              |
 | ---------------- | ------- | ---------------------------------------------------- |
 | ownerAlerts      | true    | DM the owners when a calendar or the timetable fails |
-| newAssignments   | true    | Announce assignments found by the hourly sync        |
 | timetableChanges | true    | Announce timetable changes                           |
 | deadlineHours    | [24, 3] | Hours before a deadline when alerts are sent         |
 | eveningBriefHour | 19      | Hour of the evening brief, null to turn it off       |

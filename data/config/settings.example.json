@@ -55,7 +55,6 @@
   },
   "notifications": {
     "ownerAlerts": true,
-    "newAssignments": true,
     "timetableChanges": true,
     "deadlineHours": [
       24,
