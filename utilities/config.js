@@ -56,7 +56,7 @@ const MAX_DEADLINE_HOURS = 24 * 14;
 
 function validateNotifications(notifications) {
   assert(notifications && typeof notifications === "object", "notifications must be an object");
-  for (const key of ["ownerAlerts", "newAssignments", "timetableChanges"]) {
+  for (const key of ["ownerAlerts", "timetableChanges"]) {
     const value = notifications[key];
     assert(value === undefined || typeof value === "boolean", `notifications.${key} must be true or false`);
   }

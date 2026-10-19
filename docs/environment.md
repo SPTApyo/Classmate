@@ -98,7 +98,6 @@ Also editable from Discord with /settings.
 | Variable                                      | Default | Purpose                                        |
 | --------------------------------------------- | ------- | ---------------------------------------------- |
 | SETTINGS\_\_notifications\_\_ownerAlerts      | true    | DM the owners when a calendar or the API fails |
-| SETTINGS\_\_notifications\_\_newAssignments   | true    | Announce assignments found by the hourly sync  |
 | SETTINGS\_\_notifications\_\_timetableChanges | true    | Announce timetable changes                     |
 | SETTINGS\_\_notifications\_\_deadlineHours    | [24,3]  | Hours before a deadline when alerts are sent   |
 | SETTINGS\_\_notifications\_\_eveningBriefHour | 19      | Hour of the evening brief, null turns it off   |
