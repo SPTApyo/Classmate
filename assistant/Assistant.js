@@ -25,10 +25,16 @@ const THINKING_FALLBACK = "LOW";
 const RETRYABLE_STATUSES = [429, 500, 502, 503, 504];
 const RETRYABLE_MESSAGES = ["Timeout", "ECONNRESET", "ETIMEDOUT", "socket hang up", "fetch failed"];
 const DISCORD_CATEGORY_CHANNEL = 4;
+// A stable system prompt lets Gemini cache it.
+const PER_MESSAGE_PLACEHOLDERS = {
+  timeStr: "(see the security context)",
+  userData: "(see the security context)",
+  Channel: "(see the security context)",
+};
 
 const COMPLEXITY_RULES = [
   [/génère|genere|crée|cree|generate|create|code|script|algorithm|debug|corrige|fix|refactor|optimi/i, 4],
-  [/pourquoi|comment|why|how|logique|logic|math|calcul|résous|resous|solve|prouve|prove/i, 4],
+  [/pourquoi|comment|why|how|logique|logic|math|calcul|résous|resous|solve|prouve|prove/i, 3],
   [/analyse|analyze|compare|explique|explain|détaille|detaille|résume|resume|summar|tradui|translate/i, 3],
   [/puis|ensuite|après|apres|then|étape|etape|step|d'abord|first|enfin|finally|plan|strat/i, 3],
   [/cherche|search|trouve|find|actualité|actualite|news|récent|recent|internet|web|qui est|who is/i, 2],
@@ -349,12 +355,10 @@ ${transcript}`,
         designerId: designer.discordId,
         designerUsername: designer.username,
         dateStr: now.toLocaleDateString(t.locale),
-        timeStr: now.toLocaleTimeString(t.locale),
         weekStr: String(getWeekNumber(now)),
         location: settings.get().location || "",
         community: settings.get().community || "",
-        userData: JSON.stringify(this.assistantStore.getUserById(interaction.user.id)),
-        Channel: interaction.channelId,
+        ...PER_MESSAGE_PLACEHOLDERS,
       },
       level,
     );
@@ -366,9 +370,10 @@ ${transcript}`,
       "===== SECURITY CONTEXT (trusted) =====",
       `User: ${interaction.user.username} (ID: ${interaction.user.id})`,
       `Role: ${role}`,
-      `Date: ${now.toISOString()}`,
+      `Date: ${now.toISOString()} (local time ${now.toLocaleTimeString(t.locale)})`,
       `Channel: ${interaction.channelId}`,
       `Language: ${t.locale}`,
+      `User profile: ${sanitize(JSON.stringify(this.assistantStore.getUserById(interaction.user.id) ?? null))}`,
       "======================================",
     ].join("\n");
 

@@ -55,12 +55,12 @@ with /reload. An invalid file is rejected and the previous settings stay active.
 
 ### persona.json
 
-| Key               | Default | Purpose                                                             |
-| ----------------- | ------- | ------------------------------------------------------------------- |
-| systemInstruction |         | Persona; [botName], [dateStr], [userData] and similar are filled in |
-| thinkingLevel     | minimal | minimal, low, medium or high; thinking tokens are billed as output  |
-| maxOutputTokens   | 4096    | Output cap per answer, thinking included                            |
-| temperature       | model   | Leave unset: Gemini 3 models are tuned for their default            |
+| Key               | Default | Purpose                                                                                                                                                                                    |
+| ----------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| systemInstruction |         | Persona; [botName], [dateStr], [weekStr] and similar are filled in. Keep it free of per-message values (time, user, channel): those come with each message, so Gemini can cache the prompt |
+| thinkingLevel     | minimal | minimal, low, medium or high; thinking tokens are billed as output                                                                                                                         |
+| maxOutputTokens   | 4096    | Output cap per answer, thinking included                                                                                                                                                   |
+| temperature       | model   | Leave unset: Gemini 3 models are tuned for their default                                                                                                                                   |
 
 Gemini 3 models cannot turn thinking off. When a model rejects minimal, the bot switches that model to low and
 remembers it. Short internal calls (ambient checks, summaries) always use the fast model with minimal thinking.
